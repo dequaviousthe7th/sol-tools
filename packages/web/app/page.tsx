@@ -108,10 +108,9 @@ export default function Home() {
         {connected && <RentReclaimer />}
 
         {/* Footer */}
-        <footer className="mt-8 pt-4 border-t border-[#222228]">
+        <footer className="mt-8 pt-4 border-t border-[#222228] text-center">
+          <p className="text-xs text-gray-500 mb-2">Free forever</p>
           <div className="flex items-center justify-center gap-3 text-xs text-gray-500">
-            <span>Open source and free forever</span>
-            <span className="text-gray-700">·</span>
             <a
               href="https://github.com/dequaviousthe7th/sol-rent-reclaimer"
               target="_blank"
