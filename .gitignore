@@ -61,6 +61,9 @@ coverage/
 # Planning docs
 PPlan/
 
+# Private README
+READMEpriv.md
+
 # Vercel / Cloudflare
 .vercel/
 .wrangler/
