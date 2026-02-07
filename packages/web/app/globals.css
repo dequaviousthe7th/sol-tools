@@ -178,7 +178,7 @@ body {
 }
 
 .btn-primary:active {
-  @apply scale-[0.98];
+  @apply scale-[0.98] opacity-90;
 }
 
 .btn-primary:disabled {
@@ -293,4 +293,12 @@ body {
 
 .modal-enter {
   animation: modal-in 0.2s ease-out;
+}
+
+/* Touch feedback for interactive elements */
+@media (hover: none) and (pointer: coarse) {
+  .card-hover:active {
+    @apply border-solana-purple/30;
+    box-shadow: 0 0 20px rgba(153, 69, 255, 0.08);
+  }
 }
