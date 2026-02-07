@@ -57,20 +57,26 @@ export const TransactionProgress: FC<TransactionProgressProps> = ({ current, tot
       </p>
 
       {/* Batch indicators */}
-      <div className="flex justify-center gap-2 flex-wrap max-w-xs mx-auto">
-        {Array.from({ length: total }).map((_, i) => (
-          <div
-            key={i}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              i < current
-                ? 'bg-solana-green'
-                : i === current
-                ? 'bg-solana-purple animate-pulse scale-125'
-                : 'bg-[#222228]'
-            }`}
-          />
-        ))}
-      </div>
+      {total <= 12 ? (
+        <div className="flex justify-center gap-2 flex-wrap max-w-[280px] sm:max-w-xs mx-auto">
+          {Array.from({ length: total }).map((_, i) => (
+            <div
+              key={i}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                i < current
+                  ? 'bg-solana-green'
+                  : i === current
+                  ? 'bg-solana-purple animate-pulse scale-125'
+                  : 'bg-[#222228]'
+              }`}
+            />
+          ))}
+        </div>
+      ) : (
+        <p className="text-sm text-gray-500">
+          Batch {current} of {total}
+        </p>
+      )}
     </div>
   );
 };

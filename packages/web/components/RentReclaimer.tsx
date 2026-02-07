@@ -217,7 +217,7 @@ export const RentReclaimer: FC<RentReclaimerProps> = ({ onBack }) => {
               <p className="text-gray-400 mb-8 max-w-sm mx-auto">
                 Scan your wallet to discover empty token accounts that can be closed to reclaim SOL.
               </p>
-              <button onClick={handleScan} className="btn-primary px-10 py-4 text-lg">
+              <button onClick={handleScan} className="btn-primary px-8 py-3.5 sm:px-10 sm:py-4 text-base sm:text-lg">
                 Scan Wallet
               </button>
             </div>
@@ -271,7 +271,7 @@ export const RentReclaimer: FC<RentReclaimerProps> = ({ onBack }) => {
                 <button
                   onClick={handleClose}
                   disabled={selectedAccounts.size === 0}
-                  className="w-full mt-6 btn-primary py-4 text-lg"
+                  className="w-full mt-6 btn-primary py-3.5 sm:py-4 text-base sm:text-lg"
                 >
                   Close {selectedAccounts.size} Account{selectedAccounts.size !== 1 ? 's' : ''} & Reclaim {formatSol(selectedReclaimable)} SOL
                 </button>
