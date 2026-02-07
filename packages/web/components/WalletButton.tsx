@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { useProvidersLoaded } from './LazyProviders';
+import { MobileWalletPicker } from './MobileWalletPicker';
 
 // Inner component that uses wallet hooks (only rendered when providers are loaded)
 const WalletButtonInner = dynamic(
@@ -17,6 +18,11 @@ const WalletButtonInner = dynamic(
   }
 );
 
+function isMobileBrowser(): boolean {
+  if (typeof window === 'undefined') return false;
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
 interface WalletButtonProps {
   autoOpen?: boolean;
 }
@@ -28,11 +34,21 @@ const WalletButtonWithAutoOpen = ({ autoOpen }: WalletButtonProps) => {
 export const WalletButton = () => {
   const providersLoaded = useProvidersLoaded();
   const [pendingClick, setPendingClick] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [mobile, setMobile] = useState(false);
+
+  useEffect(() => {
+    setMobile(isMobileBrowser());
+  }, []);
 
   // Handle placeholder click - store intent to open modal
   const handlePlaceholderClick = useCallback(() => {
-    setPendingClick(true);
-  }, []);
+    if (mobile) {
+      setPickerOpen(true);
+    } else {
+      setPendingClick(true);
+    }
+  }, [mobile]);
 
   // Reset pending click after providers load and we've passed it to the inner component
   useEffect(() => {
@@ -46,12 +62,15 @@ export const WalletButton = () => {
   // Show placeholder before providers load
   if (!providersLoaded) {
     return (
-      <button
-        onClick={handlePlaceholderClick}
-        className="wallet-adapter-button wallet-adapter-button-trigger"
-      >
-        {pendingClick ? 'Loading...' : 'Select Wallet'}
-      </button>
+      <>
+        <button
+          onClick={handlePlaceholderClick}
+          className="wallet-adapter-button wallet-adapter-button-trigger"
+        >
+          {pendingClick ? 'Loading...' : 'Select Wallet'}
+        </button>
+        <MobileWalletPicker open={pickerOpen} onClose={() => setPickerOpen(false)} />
+      </>
     );
   }
 
