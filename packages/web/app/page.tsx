@@ -37,7 +37,7 @@ export default function Home() {
         <footer className="mt-auto pt-3 border-t border-[#222228] text-center">
           <div className="flex items-center justify-center gap-3 text-xs text-gray-500">
             <a
-              href="https://github.com/dequaviousthe7th"
+              href="https://github.com/dequaviousthe7th/sol-reclaimer"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-1 hover:text-solana-purple transition-colors"
