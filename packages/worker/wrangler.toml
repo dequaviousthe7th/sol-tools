@@ -7,7 +7,7 @@ compatibility_date = "2024-05-12"
 # Replace the id below with the actual KV namespace ID
 [[kv_namespaces]]
 binding = "STATS"
-id = "00000000000000000000000000000000"
+id = "4275743e438c4f91a34e6ad09225ffaf"
 
 # Custom domain: api.solreclaimer.net
 # Set up via Cloudflare dashboard after initial deploy
