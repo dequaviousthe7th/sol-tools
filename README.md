@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-1.1.0-9945FF.svg" alt="Version 1.1.0"/>
+  <img src="https://img.shields.io/badge/Version-1.2.0-9945FF.svg" alt="Version 1.2.0"/>
   <img src="https://img.shields.io/badge/License-Proprietary-red.svg" alt="License: Proprietary"/>
   <img src="https://img.shields.io/badge/Fees-0%25-14F195.svg" alt="Zero Fees"/>
 </p>
@@ -94,6 +94,16 @@ Visit **[solreclaimer.net](https://solreclaimer.net)** to use the app.
 ---
 
 ## Changelog
+
+### v1.2.0
+
+**Mobile Support & Price Ticker**
+- Full mobile-responsive redesign
+- Mobile wallet picker with deep links
+- Live BTC and SOL price ticker
+- Address Lookup Tables for larger batch transactions
+- Touch feedback and UI polish
+- RPC reliability fixes
 
 ### v1.1.0
 
