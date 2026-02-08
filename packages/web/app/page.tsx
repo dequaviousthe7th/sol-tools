@@ -3,7 +3,7 @@ import { ClientApp } from '@/components/ClientApp';
 
 export default function Home() {
   return (
-    <main className="h-screen flex flex-col overflow-hidden">
+    <main className="min-h-screen flex flex-col">
       {/* Header — aligns with side panels on xl */}
       <header className="flex justify-between items-center pt-4 px-4 mb-2 mx-auto w-full max-w-4xl xl:max-w-none xl:px-[calc(50vw-38.5rem)]">
         <div className="xl:w-64 xl:flex xl:justify-center">
@@ -29,7 +29,7 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 pb-4 max-w-4xl flex flex-col flex-1 min-h-0">
+      <div className="container mx-auto px-4 pb-4 max-w-4xl flex flex-col flex-1">
         {/* Main App */}
         <ClientApp />
 

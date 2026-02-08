@@ -95,7 +95,7 @@ const HeroSection = ({ connected, onGetStarted, onOpenInfo }: { connected: boole
     </div>
 
     {/* Mobile Stats — only visible below xl */}
-    <div className="mb-6">
+    <div className="mb-6 xl:hidden">
       <MobileStats />
     </div>
 

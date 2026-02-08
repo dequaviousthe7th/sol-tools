@@ -8,67 +8,73 @@ interface WalletOption {
   getLink: (url: string) => string;
 }
 
+function WalletIcon({ bg, children }: { bg: string; children: React.ReactNode }) {
+  return (
+    <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${bg}`}>
+      {children}
+    </div>
+  );
+}
+
 const WALLETS: WalletOption[] = [
   {
     name: 'Phantom',
     icon: (
-      <svg viewBox="0 0 128 128" className="w-8 h-8" fill="none">
-        <rect width="128" height="128" rx="26" fill="#AB9FF2" />
-        <path d="M110.584 64.9142H99.142C99.142 41.7651 80.173 23 56.7724 23C33.6612 23 14.8716 41.3057 14.4118 64.0583C13.936 87.5709 36.168 108 59.8402 108H63.6285C84.4817 108 110.584 90.4505 110.584 64.9142Z" fill="url(#phantom_grad)" />
-        <path d="M86.5303 64.1428C86.5303 68.0539 83.4045 71.2142 79.5303 71.2142C75.6562 71.2142 72.5303 68.0539 72.5303 64.1428C72.5303 60.2317 75.6562 57.0714 79.5303 57.0714C83.4045 57.0714 86.5303 60.2317 86.5303 64.1428Z" fill="white" />
-        <path d="M65.5303 64.1428C65.5303 68.0539 62.4045 71.2142 58.5303 71.2142C54.6562 71.2142 51.5303 68.0539 51.5303 64.1428C51.5303 60.2317 54.6562 57.0714 58.5303 57.0714C62.4045 57.0714 65.5303 60.2317 65.5303 64.1428Z" fill="white" />
-        <defs>
-          <linearGradient id="phantom_grad" x1="64" y1="23" x2="64" y2="108" gradientUnits="userSpaceOnUse">
-            <stop stopColor="#534BB1" />
-            <stop offset="1" stopColor="#551BF9" />
-          </linearGradient>
-        </defs>
-      </svg>
+      <WalletIcon bg="bg-[#AB9FF2]">
+        <svg viewBox="0 0 40 40" className="w-5 h-5" fill="none">
+          <path d="M33 20.7H29.5C29.5 13.5 23.7 7.5 16.5 7.5C9.4 7.5 3.6 13.2 3.5 20.2C3.3 27.5 10.1 33.8 17.4 33.8H18.6C24.9 33.8 33 28.3 33 20.7Z" fill="url(#pg)" />
+          <circle cx="24" cy="20" r="2.5" fill="white" />
+          <circle cx="17.5" cy="20" r="2.5" fill="white" />
+          <defs><linearGradient id="pg" x1="18" y1="7.5" x2="18" y2="33.8"><stop stopColor="#534BB1" /><stop offset="1" stopColor="#551BF9" /></linearGradient></defs>
+        </svg>
+      </WalletIcon>
     ),
     getLink: (url) => `https://phantom.app/ul/browse/${encodeURIComponent(url)}?ref=${encodeURIComponent(url)}`,
   },
   {
     name: 'Solflare',
     icon: (
-      <svg viewBox="0 0 128 128" className="w-8 h-8" fill="none">
-        <rect width="128" height="128" rx="26" fill="#FC822B" />
-        <path d="M64 28L38 64L64 100L90 64L64 28Z" fill="white" />
-        <path d="M64 28L38 64L64 78L90 64L64 28Z" fill="white" fillOpacity="0.8" />
-      </svg>
+      <WalletIcon bg="bg-[#FC822B]">
+        <svg viewBox="0 0 40 40" className="w-5 h-5" fill="white">
+          <path d="M20 8L12 20L20 32L28 20L20 8Z" />
+        </svg>
+      </WalletIcon>
     ),
     getLink: (url) => `https://solflare.com/ul/v1/browse/${encodeURIComponent(url)}?ref=${encodeURIComponent(url)}`,
   },
   {
     name: 'Backpack',
     icon: (
-      <svg viewBox="0 0 128 128" className="w-8 h-8" fill="none">
-        <rect width="128" height="128" rx="26" fill="#1A1A2E" />
-        <rect x="36" y="32" width="56" height="64" rx="12" stroke="white" strokeWidth="6" fill="none" />
-        <path d="M48 32V26C48 17.1634 55.1634 10 64 10C72.8366 10 80 17.1634 80 26V32" stroke="white" strokeWidth="6" strokeLinecap="round" />
-        <rect x="48" y="56" width="32" height="16" rx="4" fill="white" />
-      </svg>
+      <WalletIcon bg="bg-[#E33E3F]">
+        <svg viewBox="0 0 40 40" className="w-5 h-5" fill="none">
+          <rect x="12" y="13" width="16" height="18" rx="3" stroke="white" strokeWidth="2" />
+          <path d="M15 13V11C15 8.24 17.24 6 20 6C22.76 6 25 8.24 25 11V13" stroke="white" strokeWidth="2" strokeLinecap="round" />
+          <rect x="15.5" y="20" width="9" height="4.5" rx="1" fill="white" />
+        </svg>
+      </WalletIcon>
     ),
     getLink: (url) => `https://backpack.app/ul/v1/browse/${encodeURIComponent(url)}?ref=${encodeURIComponent(url)}`,
   },
   {
     name: 'Coinbase Wallet',
     icon: (
-      <svg viewBox="0 0 128 128" className="w-8 h-8" fill="none">
-        <rect width="128" height="128" rx="26" fill="#0052FF" />
-        <circle cx="64" cy="64" r="36" fill="white" />
-        <rect x="50" y="50" width="28" height="28" rx="4" fill="#0052FF" />
-      </svg>
+      <WalletIcon bg="bg-[#0052FF]">
+        <svg viewBox="0 0 40 40" className="w-5 h-5" fill="none">
+          <circle cx="20" cy="20" r="11" fill="white" />
+          <rect x="15.5" y="15.5" width="9" height="9" rx="1.5" fill="#0052FF" />
+        </svg>
+      </WalletIcon>
     ),
     getLink: (url) => `https://go.cb-w.com/dapp?cb_url=${encodeURIComponent(url)}`,
   },
   {
     name: 'Trust Wallet',
     icon: (
-      <svg viewBox="0 0 128 128" className="w-8 h-8" fill="none">
-        <rect width="128" height="128" rx="26" fill="#0500FF" />
-        <path d="M64 28C64 28 36 44 36 68C36 92 64 100 64 100C64 100 92 92 92 68C92 44 64 28 64 28Z" fill="white" />
-        <path d="M64 38C64 38 44 50 44 68C44 86 64 92 64 92" fill="#0500FF" fillOpacity="0.15" />
-      </svg>
+      <WalletIcon bg="bg-[#0500FF]">
+        <svg viewBox="0 0 40 40" className="w-5 h-5" fill="white">
+          <path d="M20 8C20 8 10 14 10 22C10 30 20 33 20 33C20 33 30 30 30 22C30 14 20 8 20 8Z" />
+        </svg>
+      </WalletIcon>
     ),
     getLink: (url) => `https://link.trustwallet.com/open_url?coin_id=501&url=${encodeURIComponent(url)}`,
   },
