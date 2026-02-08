@@ -36,12 +36,12 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 pb-4 max-w-4xl flex flex-col flex-1">
+      <div className="container mx-auto px-4 pb-4 xl:pb-2 max-w-4xl flex flex-col flex-1">
         {/* Main App */}
         <ClientApp />
 
         {/* Footer */}
-        <footer className="mt-auto pt-1 xl:pt-3 border-t border-[#222228]">
+        <footer className="mt-auto pt-3 border-t border-[#222228]">
           <div className="flex items-center justify-between text-xs text-gray-500">
             {/* BTC price — left (desktop only) */}
             <div className="hidden xl:block"><BtcPrice /></div>

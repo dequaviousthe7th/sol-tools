@@ -40,7 +40,7 @@ const RentReclaimer = dynamic(
 
 // Hero section component
 const HeroSection = ({ connected, onGetStarted, onOpenInfo }: { connected: boolean; onGetStarted?: () => void; onOpenInfo?: () => void }) => (
-  <section className="text-center py-8 xl:py-2 flex-1 flex flex-col justify-center">
+  <section className="text-center pt-8 pb-0 xl:py-2 flex-1 flex flex-col justify-center">
     <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#111113] border border-[#222228] text-solana-purple text-sm font-medium mb-3 xl:mb-5 self-center">
       <span className="w-2 h-2 rounded-full bg-solana-green animate-pulse"></span>
       100% Free - No Hidden Fees
@@ -101,7 +101,7 @@ const HeroSection = ({ connected, onGetStarted, onOpenInfo }: { connected: boole
     </div>
 
     {/* How it works */}
-    <div className="grid md:grid-cols-3 gap-3 sm:gap-4 mb-6 xl:mb-3">
+    <div className="grid md:grid-cols-3 gap-3 sm:gap-4 mb-6">
       <FeatureCard
         icon={
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
