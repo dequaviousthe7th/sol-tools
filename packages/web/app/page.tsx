@@ -41,7 +41,7 @@ export default function Home() {
         <ClientApp />
 
         {/* Footer */}
-        <footer className="mt-auto pt-3 border-t border-[#222228]">
+        <footer className="mt-auto pt-1 xl:pt-3 border-t border-[#222228]">
           <div className="flex items-center justify-between text-xs text-gray-500">
             {/* BTC price — left (desktop only) */}
             <div className="hidden xl:block"><BtcPrice /></div>

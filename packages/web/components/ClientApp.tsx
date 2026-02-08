@@ -46,7 +46,7 @@ const HeroSection = ({ connected, onGetStarted, onOpenInfo }: { connected: boole
       100% Free - No Hidden Fees
     </div>
 
-    <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-2 xl:mb-5 order-first xl:order-none">
+    <h2 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-2 xl:mb-5 mt-4 xl:mt-0 order-first xl:order-none">
       <span className="text-white">Reclaim Your</span>
       <br />
       <span className="gradient-text">Locked SOL</span>
@@ -163,7 +163,7 @@ const HeroSection = ({ connected, onGetStarted, onOpenInfo }: { connected: boole
     </div>
 
     {/* Mobile Price Ticker — below trust badges */}
-    <div className="mt-2">
+    <div className="mt-4">
       <MobilePriceBar />
     </div>
   </section>
