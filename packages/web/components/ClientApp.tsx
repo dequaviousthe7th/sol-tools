@@ -9,6 +9,7 @@ import { InfoModal } from './InfoModal';
 import { GlobalStats } from './GlobalStats';
 import { RecentActivity } from './RecentActivity';
 import { MobileStats } from './MobileStats';
+import { MobilePriceBar } from './PriceTicker';
 
 const SidePanels = () => (
   <>
@@ -159,6 +160,11 @@ const HeroSection = ({ connected, onGetStarted, onOpenInfo }: { connected: boole
         }
         text="Solana Mainnet"
       />
+    </div>
+
+    {/* Mobile Price Ticker — below trust badges */}
+    <div className="mt-4">
+      <MobilePriceBar />
     </div>
   </section>
 );
