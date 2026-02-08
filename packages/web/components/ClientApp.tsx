@@ -143,10 +143,10 @@ const DraggablePanel = ({ children, side, selfRef, otherRef }: DraggablePanelPro
       ref={selfRef}
       className={
         hasCustomPosition
-          ? `hidden xl:block fixed w-64 panel-wrapper${isUnlocked ? ' panel-unlocked' : ''}`
+          ? `hidden xl:block fixed w-64 panel-wrapper group/panel${isUnlocked ? ' panel-unlocked' : ''}`
           : `hidden xl:block fixed ${
               side === 'left' ? 'left-[calc(50%-38.5rem)]' : 'right-[calc(50%-38.5rem)]'
-            } top-[calc(50%-4rem)] -translate-y-1/2 w-64 panel-wrapper`
+            } top-[calc(50%-4rem)] -translate-y-1/2 w-64 panel-wrapper group/panel`
       }
       style={
         hasCustomPosition
@@ -156,10 +156,10 @@ const DraggablePanel = ({ children, side, selfRef, otherRef }: DraggablePanelPro
       onMouseDown={handleMouseDown}
     >
       <button
-        className={`lock-btn absolute -bottom-2 left-1/2 -translate-x-1/2 z-10 p-1 rounded-full ${
+        className={`lock-btn absolute top-1.5 right-1.5 z-10 p-1 rounded-md ${
           locked
-            ? 'text-gray-500 hover:text-white bg-[#111113] border border-[#222228] hover:border-gray-500'
-            : 'text-solana-purple hover:text-white bg-[#111113] border border-solana-purple/40 hover:border-solana-purple'
+            ? 'text-gray-500 hover:text-white bg-black/20 hover:bg-black/40 opacity-0 group-hover/panel:opacity-100'
+            : 'text-solana-purple hover:text-white bg-black/30 hover:bg-black/50 opacity-0 group-hover/panel:opacity-100'
         }`}
         onClick={handleToggleLock}
         title={locked ? 'Unlock to drag' : 'Lock position'}
