@@ -71,9 +71,8 @@ export const SolPrice: FC = () => {
   return (
     <div className="flex items-center gap-1.5 text-xs">
       <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 32 32" fill="none">
-        <circle cx="16" cy="16" r="16" fill="url(#sol_g)" />
+        <circle cx="16" cy="16" r="16" fill="#9945FF" />
         <path d="M9.5 20.2c.1-.1.3-.2.5-.2h12.8c.3 0 .4.3.2.5l-2.2 2.2c-.1.1-.3.2-.5.2H7.5c-.3 0-.4-.3-.2-.5l2.2-2.2zm0-8.4c.1-.1.3-.2.5-.2h12.8c.3 0 .4.3.2.5l-2.2 2.2c-.1.1-.3.2-.5.2H7.5c-.3 0-.4-.3-.2-.5l2.2-2.2zm13.3 4c-.1-.1-.3-.2-.5-.2H9.5c-.3 0-.4.3-.2.5l2.2 2.2c.1.1.3.2.5.2h12.8c.3 0 .4-.3.2-.5l-2.2-2.2z" fill="white" />
-        <defs><linearGradient id="sol_g" x1="0" y1="32" x2="32" y2="0"><stop stopColor="#9945FF" /><stop offset="1" stopColor="#14F195" /></linearGradient></defs>
       </svg>
       <span className="text-white font-medium">{formatPrice(prices.solana.usd)}</span>
     </div>
@@ -85,7 +84,7 @@ export const MobilePriceBar: FC = () => {
   if (!prices) return null;
 
   return (
-    <div className="xl:hidden flex items-center justify-center gap-5 text-xs py-2">
+    <div className="xl:hidden flex items-center justify-center gap-5 text-xs">
       <BtcPrice />
       <SolPrice />
     </div>
