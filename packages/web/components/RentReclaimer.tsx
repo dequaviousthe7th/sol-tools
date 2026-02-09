@@ -11,6 +11,7 @@ import {
 } from '@solreclaimer/core';
 import { AccountList } from './AccountList';
 import { TransactionProgress } from './TransactionProgress';
+import { trackSocialClick } from './Heartbeat';
 
 type Status = 'idle' | 'scanning' | 'ready' | 'closing' | 'complete' | 'error';
 
@@ -111,6 +112,7 @@ export const RentReclaimer: FC<RentReclaimerProps> = ({ onBack }) => {
             solReclaimed: result.reclaimedLamports / 1e9,
             accountsClosed: result.closedCount,
             wallet: publicKey.toBase58(),
+            signatures: result.signatures,
           }),
         }).catch(() => {});
       }
@@ -356,6 +358,7 @@ export const RentReclaimer: FC<RentReclaimerProps> = ({ onBack }) => {
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`Just reclaimed ${formatSol(closeResult.reclaimedLamports)} SOL from ${closeResult.closedCount} empty token account${closeResult.closedCount !== 1 ? 's' : ''} with @SolanaReclaimer! #SolReclaimer\n\nReclaim yours for free: solreclaimer.net`)}`}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => trackSocialClick('share-x')}
               className="inline-flex items-center gap-2 mt-6 px-5 py-2.5 rounded-xl border border-[#222228] bg-[#111113] text-sm text-gray-300 hover:text-white hover:border-gray-500 transition-all"
             >
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
