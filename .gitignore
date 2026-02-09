@@ -16,11 +16,15 @@ build/
 # Environment (NEVER commit these - contain API keys)
 .env
 .env.local
+.env.development
+.env.production
 .env.production.local
 .env.development.local
 .env.*.local
 **/.env
 **/.env.local
+**/.env.development
+**/.env.production
 **/.env.*.local
 
 # IDE
