@@ -62,6 +62,15 @@ coverage/
 *.pem
 *.key
 
+# Private packages (deployed separately)
+packages/worker/
+packages/cli/
+
+# Admin panel
+packages/web/app/d/
+packages/web/components/AdminDashboard.tsx
+packages/web/components/AdminLogin.tsx
+
 # Planning docs
 PPlan/
 
