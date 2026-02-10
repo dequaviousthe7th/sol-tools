@@ -904,7 +904,16 @@ async function handleAdminChart(request: Request, env: Env): Promise<Response> {
 let cachedPrices: { data: string; fetchedAt: number } | null = null;
 const PRICE_CACHE_MS = 30_000;
 
-const SOL_MINT = 'So11111111111111111111111111111111111111112';
+// Pyth price feed IDs
+const PYTH_SOL_ID = '0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d';
+const PYTH_BTC_ID = '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43';
+
+interface PythResponse {
+  parsed: Array<{
+    id: string;
+    price: { price: string; expo: number };
+  }>;
+}
 
 async function handlePrices(request: Request, env: Env): Promise<Response> {
   const now = Date.now();
@@ -916,23 +925,21 @@ async function handlePrices(request: Request, env: Env): Promise<Response> {
   }
 
   try {
-    // Jupiter for SOL, CoinCap for BTC — both free, no key, server-friendly
-    const [jupRes, btcRes] = await Promise.all([
-      fetch(`https://api.jup.ag/price/v2?ids=${SOL_MINT}`),
-      fetch('https://api.coincap.io/v2/assets/bitcoin'),
-    ]);
+    const res = await fetch(
+      `https://hermes.pyth.network/v2/updates/price/latest?ids[]=${PYTH_SOL_ID}&ids[]=${PYTH_BTC_ID}`,
+    );
+
+    if (!res.ok) throw new Error('Pyth fetch failed');
+
+    const pyth = await res.json() as PythResponse;
 
     let solPrice = 0;
     let btcPrice = 0;
 
-    if (jupRes.ok) {
-      const jup = await jupRes.json() as { data: Record<string, { price: string }> };
-      solPrice = parseFloat(jup.data[SOL_MINT]?.price || '0');
-    }
-
-    if (btcRes.ok) {
-      const btc = await btcRes.json() as { data: { priceUsd: string } };
-      btcPrice = parseFloat(btc.data?.priceUsd || '0');
+    for (const entry of pyth.parsed) {
+      const usd = parseFloat(entry.price.price) * Math.pow(10, entry.price.expo);
+      if (entry.id === PYTH_SOL_ID.slice(2)) solPrice = usd;
+      if (entry.id === PYTH_BTC_ID.slice(2)) btcPrice = usd;
     }
 
     const data = JSON.stringify({
