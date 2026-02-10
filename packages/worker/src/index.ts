@@ -902,47 +902,57 @@ async function handleAdminChart(request: Request, env: Env): Promise<Response> {
 // ──────────────────────────────────────────────
 
 let cachedPrices: { data: string; fetchedAt: number } | null = null;
-const PRICE_CACHE_MS = 30_000; // cache for 30s to avoid hitting CoinGecko rate limits
+const PRICE_CACHE_MS = 30_000;
+
+const SOL_MINT = 'So11111111111111111111111111111111111111112';
 
 async function handlePrices(request: Request, env: Env): Promise<Response> {
   const now = Date.now();
 
   if (cachedPrices && now - cachedPrices.fetchedAt < PRICE_CACHE_MS) {
     return new Response(cachedPrices.data, {
-      headers: {
-        'Content-Type': 'application/json',
-        ...corsHeaders(request, env),
-      },
+      headers: { 'Content-Type': 'application/json', ...corsHeaders(request, env) },
     });
   }
 
-  const res = await fetch(
-    'https://api.coingecko.com/api/v3/simple/price?ids=solana,bitcoin&vs_currencies=usd',
-    { headers: { Accept: 'application/json' } },
-  );
+  try {
+    // Jupiter for SOL, CoinCap for BTC — both free, no key, server-friendly
+    const [jupRes, btcRes] = await Promise.all([
+      fetch(`https://api.jup.ag/price/v2?ids=${SOL_MINT}`),
+      fetch('https://api.coincap.io/v2/assets/bitcoin'),
+    ]);
 
-  if (!res.ok) {
-    // Return stale cache if available, otherwise error
+    let solPrice = 0;
+    let btcPrice = 0;
+
+    if (jupRes.ok) {
+      const jup = await jupRes.json() as { data: Record<string, { price: string }> };
+      solPrice = parseFloat(jup.data[SOL_MINT]?.price || '0');
+    }
+
+    if (btcRes.ok) {
+      const btc = await btcRes.json() as { data: { priceUsd: string } };
+      btcPrice = parseFloat(btc.data?.priceUsd || '0');
+    }
+
+    const data = JSON.stringify({
+      solana: { usd: solPrice },
+      bitcoin: { usd: btcPrice },
+    });
+
+    cachedPrices = { data, fetchedAt: now };
+
+    return new Response(data, {
+      headers: { 'Content-Type': 'application/json', ...corsHeaders(request, env) },
+    });
+  } catch {
     if (cachedPrices) {
       return new Response(cachedPrices.data, {
-        headers: {
-          'Content-Type': 'application/json',
-          ...corsHeaders(request, env),
-        },
+        headers: { 'Content-Type': 'application/json', ...corsHeaders(request, env) },
       });
     }
     return jsonResponse({ error: 'Failed to fetch prices' }, 502, request, env);
   }
-
-  const data = await res.text();
-  cachedPrices = { data, fetchedAt: now };
-
-  return new Response(data, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...corsHeaders(request, env),
-    },
-  });
 }
 
 // ──────────────────────────────────────────────
