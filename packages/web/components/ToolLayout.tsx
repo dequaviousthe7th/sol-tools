@@ -10,7 +10,7 @@ const BottomNav = dynamic(() => import('./BottomNav').then(m => ({ default: m.Bo
 export const ToolLayout = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
   // Don't offset the reclaimer page — it uses viewport-relative centering (calc(50vw-...))
-  const isReclaimer = pathname === '/';
+  const isReclaimer = pathname === '/reclaim';
 
   return (
     <div className="min-h-screen flex flex-col">

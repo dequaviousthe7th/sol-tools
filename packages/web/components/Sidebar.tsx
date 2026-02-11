@@ -6,7 +6,7 @@ export const TOOLS = [
   {
     id: 'reclaim',
     label: 'Reclaim',
-    href: '/',
+    href: '/reclaim',
     description: 'Reclaim locked SOL from empty token accounts',
   },
   {
@@ -36,8 +36,7 @@ export const Sidebar = ({ activePath }: SidebarProps) => {
       {/* Tool buttons */}
       <nav className="flex-1 flex flex-col items-center pt-4 gap-1">
         {TOOLS.map(tool => {
-          const isActive = activePath === tool.href ||
-            (tool.href !== '/' && activePath.startsWith(tool.href));
+          const isActive = activePath === tool.href;
           return (
             <Link
               key={tool.id}
