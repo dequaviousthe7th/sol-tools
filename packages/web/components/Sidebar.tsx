@@ -15,6 +15,12 @@ export const TOOLS = [
     href: '/vanity',
     description: 'Generate vanity Solana wallet addresses',
   },
+  {
+    id: 'hackathon',
+    label: 'Hackathon',
+    href: '/hackathon',
+    description: 'PumpFun Build in Public hackathon screener',
+  },
 ] as const;
 
 interface SidebarProps {
@@ -60,6 +66,9 @@ export const Sidebar = ({ activePath, isOpen, onToggle }: SidebarProps) => {
               )}
               <ToolIcon id={tool.id} />
               <span className="text-[10px] mt-1 font-medium">{tool.label}</span>
+              {tool.id === 'hackathon' && (
+                <span className="text-[7px] font-bold text-solana-purple leading-none mt-0.5">LIMITED</span>
+              )}
             </Link>
           );
         })}
@@ -91,6 +100,13 @@ function ToolIcon({ id }: { id: string }) {
       return (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+        </svg>
+      );
+    case 'hackathon':
+      return (
+        <svg className="w-5 h-3" viewBox="0 0 20 12" fill="none">
+          <rect x="0.5" y="0.5" width="19" height="11" rx="5.5" fill="white" stroke="currentColor" strokeWidth="1" />
+          <path d="M10 0.5H14.5C17.2614 0.5 19.5 2.73858 19.5 5.5V6.5C19.5 9.26142 17.2614 11.5 14.5 11.5H10V0.5Z" fill="#82e24c" stroke="currentColor" strokeWidth="1" />
         </svg>
       );
     default:
