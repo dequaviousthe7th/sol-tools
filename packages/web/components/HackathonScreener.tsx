@@ -150,7 +150,8 @@ export const HackathonScreener = () => {
   }, []);
 
   const filtered = useMemo(() => {
-    let list = tokens;
+    // Filter out tokens with no DexScreener data
+    let list = tokens.filter(t => t.symbol !== '???');
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(t =>
@@ -166,7 +167,7 @@ export const HackathonScreener = () => {
     <div>
       {/* Banner */}
       <div className="card mb-4 overflow-hidden">
-        <div className="h-[2px] w-full bg-gradient-to-r from-orange-500 to-yellow-400" />
+        <div className="h-[2px] w-full bg-gradient-to-r from-solana-purple to-solana-green" />
         <div className="p-4 sm:p-5">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
@@ -216,25 +217,30 @@ export const HackathonScreener = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search tokens..."
-            className="w-full bg-[#111113] border border-[#222228] rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-gray-600 focus:border-orange-500/50 focus:outline-none transition-colors"
+            className="w-full bg-[#111113] border border-[#222228] rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-gray-600 focus:border-solana-green/50 focus:outline-none transition-colors"
           />
         </div>
 
         {/* Sort */}
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as SortKey)}
-          className="bg-[#111113] border border-[#222228] rounded-xl px-4 pr-8 py-2.5 text-sm text-white focus:border-orange-500/50 focus:outline-none transition-colors cursor-pointer min-w-[140px]"
-        >
-          {SORT_OPTIONS.map(opt => (
-            <option key={opt.value} value={opt.value}>{opt.label}</option>
-          ))}
-        </select>
+        <div className="relative min-w-[150px]">
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as SortKey)}
+            className="w-full appearance-none bg-[#111113] border border-[#222228] rounded-xl px-4 pr-9 py-2.5 text-sm text-white focus:border-solana-green/50 focus:outline-none transition-colors cursor-pointer"
+          >
+            {SORT_OPTIONS.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+          <svg className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </div>
 
         {/* Submit button */}
         <button
           onClick={() => setSubmitOpen(true)}
-          className="flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-yellow-400 text-white font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 hover:opacity-90 hover:scale-[1.01] active:scale-[0.98] whitespace-nowrap"
+          className="flex items-center justify-center gap-2 bg-gradient-to-r from-solana-purple to-solana-green text-white font-semibold px-5 py-2.5 rounded-xl transition-all duration-200 hover:opacity-90 hover:scale-[1.01] active:scale-[0.98] whitespace-nowrap"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -249,7 +255,7 @@ export const HackathonScreener = () => {
           <p className="text-red-400 text-sm mb-3">{error}</p>
           <button
             onClick={() => { setLoading(true); fetchTokens(); }}
-            className="text-orange-400 text-sm hover:underline"
+            className="text-solana-purple text-sm hover:underline"
           >
             Try again
           </button>
@@ -261,7 +267,7 @@ export const HackathonScreener = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="card overflow-hidden">
-              <div className="h-[2px] w-full bg-gradient-to-r from-orange-500/30 to-yellow-400/30" />
+              <div className="h-[2px] w-full bg-gradient-to-r from-solana-purple/30 to-solana-green/30" />
               <div className="p-4 space-y-3 animate-pulse">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-[#222228]" />
