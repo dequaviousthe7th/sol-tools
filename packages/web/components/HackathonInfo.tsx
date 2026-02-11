@@ -139,18 +139,10 @@ export const HackathonInfo: FC = () => {
         <div className="p-4 pb-3">
           <div className="flex items-center gap-2.5">
             <img
-              src="https://pbs.twimg.com/profile_images/1886495917502230528/TX6kaGJM_200x200.jpg"
+              src="/pumpfun-avatar.jpg"
               alt="pump.fun"
               className="w-10 h-10 rounded-full flex-shrink-0"
-              onError={(e) => {
-                const el = e.target as HTMLImageElement;
-                el.style.display = 'none';
-                el.nextElementSibling?.classList.remove('hidden');
-              }}
             />
-            <div className="w-10 h-10 rounded-full flex-shrink-0 bg-[#82e24c] items-center justify-center text-black font-bold text-xs hidden">
-              PF
-            </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-1">
                 <span className="text-sm font-bold text-white">pump.fun</span>
@@ -193,19 +185,24 @@ export const HackathonInfo: FC = () => {
           rel="noopener noreferrer"
           className="block mx-4 mb-3 rounded-xl overflow-hidden border border-[#222228] hover:border-solana-purple/30 transition-colors relative group/video"
         >
-          <div className="aspect-video bg-[#0a0a0b] flex items-center justify-center relative">
-            <img
-              src="https://pbs.twimg.com/ext_tw_video_thumb/2013386380911476736/pu/img/yQ0rdNnLq-uFbbBw.jpg"
-              alt="Build in Public Hackathon video"
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-              }}
-            />
-            {/* Play button overlay */}
-            <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover/video:bg-black/30 transition-colors">
-              <div className="w-12 h-12 rounded-full bg-solana-purple/90 flex items-center justify-center group-hover/video:bg-solana-purple transition-colors shadow-lg">
-                <svg className="w-5 h-5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+          <div className="aspect-video bg-gradient-to-br from-[#0a0a0b] via-[#111113] to-[#0a0a0b] flex items-center justify-center relative">
+            {/* Decorative background */}
+            <div className="absolute inset-0 opacity-20">
+              <div className="absolute top-3 left-4 w-16 h-16 rounded-full bg-solana-purple/30 blur-xl" />
+              <div className="absolute bottom-3 right-4 w-20 h-20 rounded-full bg-solana-green/20 blur-xl" />
+            </div>
+            <div className="absolute top-3 left-3 flex items-center gap-1.5">
+              <img src="/pumpfun-avatar.jpg" alt="" className="w-5 h-5 rounded-full" />
+              <span className="text-[10px] text-gray-400 font-medium">pump.fun</span>
+            </div>
+            <div className="text-center px-6 z-10">
+              <p className="text-[11px] text-gray-300 font-semibold leading-tight">Build in Public</p>
+              <p className="text-[10px] text-gray-500 mt-0.5">Hackathon Announcement</p>
+            </div>
+            {/* Play button */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full bg-solana-purple/80 flex items-center justify-center group-hover/video:bg-solana-purple transition-colors shadow-lg mt-6">
+                <svg className="w-4 h-4 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M8 5v14l11-7z" />
                 </svg>
               </div>

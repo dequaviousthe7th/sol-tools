@@ -150,8 +150,7 @@ export const HackathonScreener = () => {
   }, []);
 
   const filtered = useMemo(() => {
-    // Filter out tokens with no DexScreener data
-    let list = tokens.filter(t => t.symbol !== '???');
+    let list = tokens;
     if (search.trim()) {
       const q = search.toLowerCase();
       list = list.filter(t =>

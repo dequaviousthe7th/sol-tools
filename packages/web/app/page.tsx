@@ -25,7 +25,7 @@ const tools = [
     id: 'vanity',
     title: 'Vanity Generator',
     badge: 'CLIENT-SIDE',
-    badgeClass: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
+    badgeClass: 'bg-solana-green/20 text-solana-green border-solana-green/30',
     description: 'Generate custom Solana wallet addresses with your chosen prefix or suffix. Runs entirely in your browser — keys never leave your device.',
     href: '/vanity',
     accentFrom: 'from-solana-green',
@@ -45,15 +45,15 @@ const tools = [
     id: 'hackathon',
     title: 'Hackathon Screener',
     badge: 'LIVE',
-    badgeClass: 'bg-orange-500/20 text-orange-400 border-orange-500/30',
+    badgeClass: 'bg-solana-green/20 text-solana-green border-solana-green/30',
     description: 'Track PumpFun "Build in Public" hackathon tokens with live market data, price changes, and key links — all in one place.',
     href: '/hackathon',
-    accentFrom: 'from-orange-500',
-    accentTo: 'to-yellow-400',
-    iconBg: 'from-orange-500/10 to-yellow-400/10',
-    iconColor: 'text-orange-400',
-    hoverBorder: 'group-hover:border-orange-500/40 group-hover:shadow-[0_0_15px_rgba(249,115,22,0.15)]',
-    linkColor: 'text-orange-400',
+    accentFrom: 'from-solana-purple',
+    accentTo: 'to-solana-green',
+    iconBg: 'from-solana-purple/10 to-solana-green/10',
+    iconColor: 'text-solana-purple',
+    hoverBorder: 'group-hover:border-solana-purple/40 group-hover:shadow-[0_0_15px_rgba(153,69,255,0.15)]',
+    linkColor: 'text-solana-purple',
     dotColor: 'bg-solana-green/60 group-hover:bg-solana-green',
     icon: (
       <svg className="w-6 h-3.5" viewBox="0 0 20 12" fill="none">
@@ -123,7 +123,7 @@ export default function HubPage() {
                       {tool.badge}
                     </span>
                     {tool.id === 'hackathon' && (
-                      <span className="inline-flex px-1.5 py-0.5 text-[8px] font-bold uppercase bg-orange-500/20 text-orange-400 rounded-full border border-orange-500/30">
+                      <span className="inline-flex px-1.5 py-0.5 text-[8px] font-bold uppercase bg-solana-purple/20 text-solana-purple rounded-full border border-solana-purple/30">
                         Limited Time
                       </span>
                     )}

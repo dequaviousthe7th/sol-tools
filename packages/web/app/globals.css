@@ -271,9 +271,11 @@ body {
   background: #444;
 }
 
-/* Hover-only scrollbar — hides scrollbar until container is hovered */
+/* Hover-only scrollbar — always reserves space, only shows thumb on hover */
 .scroll-fade {
-  scrollbar-width: none;
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  scrollbar-gutter: stable;
 }
 
 .scroll-fade::-webkit-scrollbar {
@@ -287,11 +289,9 @@ body {
 .scroll-fade::-webkit-scrollbar-thumb {
   background: transparent;
   border-radius: 3px;
-  transition: background 0.2s;
 }
 
 .scroll-fade:hover {
-  scrollbar-width: thin;
   scrollbar-color: #333 transparent;
 }
 
