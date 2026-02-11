@@ -142,7 +142,7 @@ export const VanityFAQ: FC = () => {
       className={
         hasCustomPosition
           ? `hidden 2xl:block fixed w-[320px] panel-wrapper group/panel${isUnlocked ? ' panel-unlocked' : ''}`
-          : 'hidden 2xl:block fixed left-[calc(25vw-12rem-106px)] top-1/2 -translate-y-1/2 w-[320px] panel-wrapper group/panel'
+          : 'hidden 2xl:block fixed left-[calc(25vw-12rem-100px)] top-1/2 -translate-y-1/2 w-[320px] panel-wrapper group/panel'
       }
       style={
         hasCustomPosition
@@ -164,7 +164,7 @@ export const VanityFAQ: FC = () => {
         <LockIcon locked={locked} />
       </button>
 
-      <div className="card p-6 h-[420px] overflow-y-auto">
+      <div className="card p-6 h-[500px] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center gap-3 mb-5">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-solana-purple/20 to-solana-green/20 flex items-center justify-center text-solana-purple">
