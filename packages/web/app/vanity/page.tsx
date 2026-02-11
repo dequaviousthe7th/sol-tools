@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
+import { PriceProvider, BtcPrice, SolPrice } from '@/components/PriceTicker';
+import { FooterSocialLinks } from '@/components/Heartbeat';
 
 export const metadata: Metadata = {
   title: 'Vanity Wallet Generator - SolReclaimer',
@@ -11,9 +13,15 @@ const VanityGenerator = dynamic(
   { ssr: false }
 );
 
+const VanityFAQ = dynamic(
+  () => import('@/components/VanityFAQ').then(m => m.VanityFAQ),
+  { ssr: false }
+);
+
 export default function VanityPage() {
   return (
-    <main className="min-h-screen flex flex-col">
+    <PriceProvider>
+    <main className="min-h-screen xl:h-screen xl:overflow-hidden flex flex-col">
       {/* Page header */}
       <header className="flex items-center pt-4 px-4 mb-2 mx-auto w-full max-w-3xl">
         <div className="flex items-center gap-3">
@@ -29,29 +37,31 @@ export default function VanityPage() {
         </div>
       </header>
 
+      {/* Desktop FAQ side panel */}
+      <div className="hidden xl:block">
+        <VanityFAQ />
+      </div>
+
       {/* Content */}
-      <div className="container mx-auto px-4 pb-4 max-w-3xl flex flex-col flex-1">
+      <div className="container mx-auto px-4 pb-4 xl:pb-2 max-w-3xl flex flex-col flex-1">
         <VanityGenerator />
 
-        {/* Footer */}
+        {/* Footer — exact copy of SolReclaimer footer */}
         <footer className="mt-auto pt-3 border-t border-[#222228]">
-          <div className="flex items-center justify-center gap-3 text-xs text-gray-500">
-            <span>Built by <a
-              href="https://x.com/dequavious7th"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-solana-purple transition-colors"
-            >Dequavious</a></span>
-            <span className="text-gray-700">&middot;</span>
-            <a
-              href="https://github.com/dequaviousthe7th/sol-reclaimer"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hover:text-solana-purple transition-colors"
-            >GitHub</a>
+          <div className="flex items-center justify-between text-xs text-gray-500">
+            {/* BTC price — left (desktop only) */}
+            <div className="hidden xl:block"><BtcPrice /></div>
+
+            {/* Center links with social tracking */}
+            <FooterSocialLinks />
+
+            {/* SOL price — right (desktop only) */}
+            <div className="hidden xl:block"><SolPrice /></div>
           </div>
         </footer>
       </div>
+
     </main>
+    </PriceProvider>
   );
 }
