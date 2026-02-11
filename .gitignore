@@ -13,7 +13,13 @@ out/
 **/out/
 build/
 
-# Environment (NEVER commit these - contain API keys)
+# Rust / WASM build artifacts
+**/target/
+**/*.wasm
+!packages/web/public/wasm/**/*.wasm
+Cargo.lock
+
+# Environment (NEVER commit — contain API keys)
 .env
 .env.local
 .env.development
@@ -33,6 +39,7 @@ build/
 *.swp
 *.swo
 *.sublime-*
+*.code-workspace
 
 # OS
 .DS_Store
@@ -40,6 +47,7 @@ build/
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+._*
 
 # Logs
 *.log
@@ -56,11 +64,25 @@ yarn-error.log*
 coverage/
 .nyc_output/
 
-# Misc
-*.tgz
-.cache/
+# Secrets & keys
 *.pem
 *.key
+*.p12
+*.pfx
+*.cert
+
+# Archives & packages
+*.tgz
+*.tar.gz
+*.zip
+
+# Cache
+.cache/
+.eslintcache
+.npm
+
+# TypeScript cache
+*.tsbuildinfo
 
 # Private packages (deployed separately)
 packages/worker/
@@ -83,9 +105,5 @@ READMEpriv.md
 .cloudflare/
 **/.dev.vars
 
-# Debug
-.npm
-.eslintcache
-
-# TypeScript cache
-*.tsbuildinfo
+# Claude Code
+.claude/
