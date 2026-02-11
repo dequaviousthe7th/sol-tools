@@ -12,13 +12,23 @@ const HackathonScreener = dynamic(
   { ssr: false }
 );
 
+const HackathonInfo = dynamic(
+  () => import('@/components/HackathonInfo').then(m => m.HackathonInfo),
+  { ssr: false }
+);
+
+const HackathonDetails = dynamic(
+  () => import('@/components/HackathonDetails').then(m => m.HackathonDetails),
+  { ssr: false }
+);
+
 export default function HackathonPage() {
   return (
     <main className="flex-1 flex flex-col xl:min-h-0">
       <Heartbeat />
 
       {/* Page header */}
-      <header className="flex items-center pt-4 px-4 mb-2 mx-auto w-full max-w-5xl">
+      <header className="flex items-center justify-between pt-4 px-4 mb-2 mx-auto w-full max-w-5xl">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-solana-purple to-solana-green flex items-center justify-center">
             <svg className="w-5 h-3" viewBox="0 0 20 12" fill="none">
@@ -41,10 +51,28 @@ export default function HackathonPage() {
             </div>
           </div>
         </div>
+        <a
+          href="https://hackathon.pump.fun/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#111113] border border-[#222228] text-xs text-gray-400 hover:text-solana-purple hover:border-solana-purple/30 transition-colors"
+        >
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+          </svg>
+          <span className="hidden sm:inline">hackathon.pump.fun</span>
+          <span className="sm:hidden">Hackathon</span>
+        </a>
       </header>
 
+      {/* Desktop side panels */}
+      <div className="hidden xl:block">
+        <HackathonDetails />
+        <HackathonInfo />
+      </div>
+
       {/* Scrollable content area */}
-      <div className="flex-1 overflow-y-auto px-4 pb-4 xl:pb-2">
+      <div className="flex-1 overflow-y-auto scroll-fade px-4 pb-4 xl:pb-2">
         <div className="max-w-5xl mx-auto">
           <HackathonScreener />
         </div>
