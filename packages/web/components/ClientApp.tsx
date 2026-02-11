@@ -4,6 +4,7 @@ import { useWallet } from '@solana/wallet-adapter-react';
 import dynamic from 'next/dynamic';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useProvidersLoaded } from './LazyProviders';
+import { useSidebarOpen } from './ToolLayout';
 import { WalletButton } from './WalletButton';
 import { InfoModal } from './InfoModal';
 import { GlobalStats } from './GlobalStats';
@@ -35,6 +36,8 @@ interface DraggablePanelProps {
 }
 
 const DraggablePanel = ({ children, side, selfRef, otherRef }: DraggablePanelProps) => {
+  const sidebarOpen = useSidebarOpen();
+  const sidebarOffset = sidebarOpen ? 36 : 0; // half of 72px sidebar
   const [locked, setLocked] = useState(true);
   const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
   const dragState = useRef({
@@ -144,14 +147,15 @@ const DraggablePanel = ({ children, side, selfRef, otherRef }: DraggablePanelPro
       className={
         hasCustomPosition
           ? `hidden xl:block fixed w-64 panel-wrapper group/panel${isUnlocked ? ' panel-unlocked' : ''}`
-          : `hidden xl:block fixed ${
-              side === 'left' ? 'left-[calc(50%-38.5rem)]' : 'right-[calc(50%-38.5rem)]'
-            } top-[calc(50%-4rem)] -translate-y-1/2 w-64 panel-wrapper group/panel`
+          : `hidden xl:block fixed top-[calc(50%-4rem)] -translate-y-1/2 w-64 panel-wrapper group/panel`
       }
       style={
         hasCustomPosition
           ? { left: position.x, top: position.y, ...(isUnlocked ? { willChange: 'transform' } : {}) }
-          : undefined
+          : {
+              [side === 'left' ? 'left' : 'right']: `calc(50% ${side === 'left' ? '+' : '-'} ${sidebarOffset}px - 38.5rem)`,
+              transition: `${side === 'left' ? 'left' : 'right'} 350ms cubic-bezier(0.16, 1, 0.3, 1)`,
+            }
       }
       onMouseDown={handleMouseDown}
     >

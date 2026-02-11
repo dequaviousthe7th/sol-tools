@@ -1,6 +1,7 @@
 'use client';
 
 import { FC, useState, useRef, useCallback, useEffect } from 'react';
+import { useSidebarOpen } from './ToolLayout';
 
 interface FAQItem {
   question: string;
@@ -51,6 +52,8 @@ const LockIcon = ({ locked }: { locked: boolean }) => (
 );
 
 export const VanityFAQ: FC = () => {
+  const sidebarOpen = useSidebarOpen();
+  const sidebarOffset = sidebarOpen ? 36 : 0;
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [locked, setLocked] = useState(true);
   const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
@@ -142,12 +145,12 @@ export const VanityFAQ: FC = () => {
       className={
         hasCustomPosition
           ? `hidden 2xl:block fixed w-[320px] panel-wrapper group/panel${isUnlocked ? ' panel-unlocked' : ''}`
-          : 'hidden 2xl:block fixed left-[calc(25vw-12rem-100px)] top-1/2 -translate-y-1/2 w-[320px] panel-wrapper group/panel'
+          : 'hidden 2xl:block fixed top-1/2 -translate-y-1/2 w-[320px] panel-wrapper group/panel'
       }
       style={
         hasCustomPosition
           ? { left: position.x, top: position.y, ...(isUnlocked ? { willChange: 'transform' } : {}) }
-          : undefined
+          : { left: `calc(25vw + ${sidebarOffset}px - 12rem - 100px)`, transition: 'left 350ms cubic-bezier(0.16, 1, 0.3, 1)' }
       }
       onMouseDown={handleMouseDown}
     >
