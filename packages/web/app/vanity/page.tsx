@@ -47,9 +47,6 @@ export default function VanityPage() {
             <WalletButton />
           </div>
         </div>
-        <div className="sm:hidden mt-3">
-          <WalletButton />
-        </div>
       </header>
 
       <VanityPageClient />

@@ -22,7 +22,7 @@ const TIERS = [
 
 type ModalState = 'idle' | 'building' | 'signing' | 'confirming' | 'verifying' | 'success' | 'error';
 
-const TREASURY = process.env.NEXT_PUBLIC_TREASURY_ADDRESS || '';
+const TREASURY = process.env.NEXT_PUBLIC_TREASURY_ADDRESS || 'soL8nZop9Gbncv1ccYPaUEszppt16t4yLTpXYeB7jUs';
 const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL || '';
 
 // Map common Solana errors to user-friendly messages

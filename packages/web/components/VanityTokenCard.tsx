@@ -4,6 +4,7 @@ import { FC, useState, useRef, useCallback, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { useSidebarOpen } from './ToolLayout';
+import { MobileWalletPicker } from './MobileWalletPicker';
 
 interface VanityTokenCardProps {
   refreshKey: number;
@@ -145,6 +146,8 @@ export const VanityTokenCard: FC<VanityTokenCardProps> = ({ refreshKey, onBuyTok
   const hasCustomPosition = position !== null;
   const isUnlocked = !locked;
 
+  const [pickerOpen, setPickerOpen] = useState(false);
+
   if (mobile) {
     return (
       <div className="card p-6">
@@ -188,11 +191,12 @@ export const VanityTokenCard: FC<VanityTokenCardProps> = ({ refreshKey, onBuyTok
               Connect your wallet to purchase tokens and start generating vanity addresses.
             </p>
             <button
-              onClick={() => setVisible(true)}
+              onClick={() => setPickerOpen(true)}
               className="w-full btn-primary py-2.5 text-sm font-semibold"
             >
               Connect Wallet
             </button>
+            <MobileWalletPicker open={pickerOpen} onClose={() => setPickerOpen(false)} />
           </>
         )}
 
