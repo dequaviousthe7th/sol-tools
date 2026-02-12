@@ -3,6 +3,12 @@ set -e
 
 cd "$(dirname "$0")"
 
+# Skip WASM build in CI — pre-built files are committed in public/wasm/
+if ! command -v wasm-pack &> /dev/null; then
+  echo "wasm-pack not found, skipping WASM build (using pre-built files)"
+  exit 0
+fi
+
 wasm-pack build \
   --target no-modules \
   --out-dir ../../public/wasm \
