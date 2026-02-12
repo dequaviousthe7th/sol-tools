@@ -44,7 +44,7 @@ export default function ReclaimPage() {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 pb-4 xl:pb-2 max-w-4xl flex flex-col flex-1">
+      <div className="container mx-auto px-4 pb-8 xl:pb-4 max-w-4xl flex flex-col flex-1">
         {/* Main App */}
         <ClientApp />
       </div>

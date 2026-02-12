@@ -41,7 +41,7 @@ export const AccountList: FC<AccountListProps> = ({
       </div>
 
       <div className="bg-[#0d0d0f] border border-[#222228] rounded-xl overflow-hidden">
-        <div className="max-h-[280px] sm:max-h-[400px] overflow-y-auto scroll-fade">
+        <div className="max-h-[280px] sm:max-h-[340px] overflow-y-auto scroll-fade">
           {accounts.map((account, index) => {
             const pubkey = account.pubkey.toBase58();
             const isSelected = selectedAccounts.has(pubkey);
