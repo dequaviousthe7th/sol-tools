@@ -175,6 +175,7 @@ export const BuyTokensModal: FC<BuyTokensModalProps> = ({ open, onClose, onPurch
       const result = await verifyWithWorker(publicKey.toBase58(), signature, tier.id);
       setCredited(result.credited);
       setState('success');
+      onPurchaseComplete();
     } catch (err) {
       const msg = err instanceof Error ? err.message : 'Purchase failed';
       // User rejected — just go back to idle silently
@@ -193,10 +194,12 @@ export const BuyTokensModal: FC<BuyTokensModalProps> = ({ open, onClose, onPurch
           const result = await verifyWithWorker(publicKey!.toBase58(), signature, tier.id);
           setCredited(result.credited);
           setState('success');
+          onPurchaseComplete();
           return;
-        } catch {
+        } catch (verifyErr) {
           // Worker also couldn't verify — show error with the signature so user can recover
-          setError(`Payment sent but verification failed. Save your signature and contact support: ${signature.slice(0, 20)}...`);
+          const verifyMsg = verifyErr instanceof Error ? verifyErr.message : 'Unknown error';
+          setError(`Payment sent but verification failed (${verifyMsg}). Signature: ${signature.slice(0, 20)}...`);
           setState('error');
           return;
         }

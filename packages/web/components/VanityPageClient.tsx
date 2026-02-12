@@ -78,6 +78,7 @@ export const VanityPageClient = () => {
       <div className="container mx-auto px-4 pb-4 xl:pb-2 max-w-3xl flex flex-col flex-1">
         <VanityGenerator
           onNeedTokens={handleNeedTokens}
+          onTokenUsed={handlePurchaseComplete}
           tokenBalance={tokenBalance}
         />
       </div>

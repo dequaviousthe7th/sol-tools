@@ -18,12 +18,13 @@ interface FoundResult {
 
 interface VanityGeneratorProps {
   onNeedTokens?: () => void;
+  onTokenUsed?: () => void;
   tokenBalance?: number | null;
 }
 
 const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL || '';
 
-export const VanityGenerator: FC<VanityGeneratorProps> = ({ onNeedTokens, tokenBalance }) => {
+export const VanityGenerator: FC<VanityGeneratorProps> = ({ onNeedTokens, onTokenUsed, tokenBalance }) => {
   const { publicKey } = useWallet();
   const [status, setStatus] = useState<Status>('idle');
   const [mode, setMode] = useState<Mode>('prefix');
@@ -104,6 +105,8 @@ export const VanityGenerator: FC<VanityGeneratorProps> = ({ onNeedTokens, tokenB
           setError((data as { error?: string }).error || 'Token check failed');
           return;
         }
+
+        onTokenUsed?.();
       } catch {
         setError('Network error checking tokens');
         return;
