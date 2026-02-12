@@ -71,7 +71,7 @@ export const ToolLayout = ({ children }: { children: ReactNode }) => {
         {children}
 
         {/* Footer */}
-        <footer className="mt-auto pt-3 pb-3 border-t border-[#222228]">
+        <footer className="mt-auto sticky bottom-0 bg-[#0a0a0b] z-40 pt-3 pb-3 border-t border-[#222228]">
           <div className="px-6 lg:px-10 flex items-center justify-between text-[11px] text-gray-500">
             <BtcPrice />
             <FooterSocialLinks />

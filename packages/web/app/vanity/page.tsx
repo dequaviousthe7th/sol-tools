@@ -43,6 +43,11 @@ export default function VanityPage() {
               </div>
             </div>
           </div>
+          <div className="hidden sm:block">
+            <WalletButton />
+          </div>
+        </div>
+        <div className="sm:hidden mt-3">
           <WalletButton />
         </div>
       </header>

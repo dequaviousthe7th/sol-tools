@@ -8,6 +8,7 @@ import { useSidebarOpen } from './ToolLayout';
 interface VanityTokenCardProps {
   refreshKey: number;
   onBuyTokens: () => void;
+  mobile?: boolean;
 }
 
 const WORKER_URL = process.env.NEXT_PUBLIC_WORKER_URL || '';
@@ -28,7 +29,7 @@ const LockIcon = ({ locked }: { locked: boolean }) => (
   </svg>
 );
 
-export const VanityTokenCard: FC<VanityTokenCardProps> = ({ refreshKey, onBuyTokens }) => {
+export const VanityTokenCard: FC<VanityTokenCardProps> = ({ refreshKey, onBuyTokens, mobile }) => {
   const sidebarOpen = useSidebarOpen();
   const sidebarOffset = sidebarOpen ? 36 : 0;
   const { publicKey } = useWallet();
@@ -143,6 +144,100 @@ export const VanityTokenCard: FC<VanityTokenCardProps> = ({ refreshKey, onBuyTok
 
   const hasCustomPosition = position !== null;
   const isUnlocked = !locked;
+
+  if (mobile) {
+    return (
+      <div className="card p-6">
+        {/* Header */}
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-solana-purple/20 to-solana-green/20 flex items-center justify-center">
+            <svg className="w-5 h-5 text-solana-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-white">Vanity Tokens</h3>
+            <p className="text-xs text-gray-500">1 token = 1 search</p>
+          </div>
+        </div>
+
+        {publicKey ? (
+          <>
+            <div className="rounded-xl bg-gradient-to-br from-solana-purple/10 to-solana-green/10 border border-[#222228] p-4 mb-4 text-center">
+              {loading ? (
+                <div className="h-10 flex items-center justify-center">
+                  <div className="w-5 h-5 rounded-full border-2 border-solana-purple/30 border-t-solana-purple animate-spin" />
+                </div>
+              ) : (
+                <>
+                  <p className="text-3xl font-bold text-solana-green">{balance ?? 0}</p>
+                  <p className="text-xs text-gray-500 mt-1">{balance === 1 ? 'token' : 'tokens'} remaining</p>
+                </>
+              )}
+            </div>
+            <button
+              onClick={onBuyTokens}
+              className="w-full btn-primary py-2.5 text-sm font-semibold"
+            >
+              Buy Tokens
+            </button>
+          </>
+        ) : (
+          <>
+            <p className="text-xs text-gray-500 mb-4 leading-relaxed">
+              Connect your wallet to purchase tokens and start generating vanity addresses.
+            </p>
+            <button
+              onClick={() => setVisible(true)}
+              className="w-full btn-primary py-2.5 text-sm font-semibold"
+            >
+              Connect Wallet
+            </button>
+          </>
+        )}
+
+        {/* Divider */}
+        <div className="border-t border-[#1a1a1f] my-4" />
+
+        {/* How It Works */}
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-solana-purple/20 to-solana-green/20 flex items-center justify-center">
+            <svg className="w-4 h-4 text-solana-purple" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 className="text-xs font-bold text-white">How It Works</h3>
+        </div>
+
+        <div className="space-y-2 text-xs text-gray-400 leading-relaxed">
+          <div className="flex gap-2">
+            <span className="text-solana-green font-bold mt-px">1.</span>
+            <p>Buy tokens with SOL. Tokens are tied to your wallet address.</p>
+          </div>
+          <div className="flex gap-2">
+            <span className="text-solana-green font-bold mt-px">2.</span>
+            <p>Each search consumes 1 token. The token is used when you click Generate.</p>
+          </div>
+          <div className="flex gap-2">
+            <span className="text-solana-green font-bold mt-px">3.</span>
+            <p>Larger bundles save more &mdash; up to 40% off at the 50-token tier.</p>
+          </div>
+        </div>
+
+        {/* Warning */}
+        <div className="mt-3 p-2.5 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+          <div className="flex gap-2">
+            <svg className="w-4 h-4 text-yellow-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <p className="text-[11px] text-yellow-400/90 leading-relaxed">
+              Don&apos;t refresh or close the page during a search &mdash; your token is consumed when the search starts and cannot be refunded.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

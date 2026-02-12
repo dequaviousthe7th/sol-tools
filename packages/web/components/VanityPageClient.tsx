@@ -83,7 +83,16 @@ export const VanityPageClient = () => {
         />
       </div>
 
-      {/* Mobile FAQ — below main content, hidden on desktop */}
+      {/* Mobile Token Card — below generator, hidden on desktop */}
+      <div className="xl:hidden px-4 pb-4 max-w-3xl mx-auto w-full">
+        <VanityTokenCard
+          mobile
+          refreshKey={refreshKey}
+          onBuyTokens={handleNeedTokens}
+        />
+      </div>
+
+      {/* Mobile FAQ — below token card, hidden on desktop */}
       <div className="xl:hidden px-4 pb-4 max-w-3xl mx-auto w-full">
         <VanityFAQ mobile />
       </div>

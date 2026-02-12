@@ -18,7 +18,7 @@ export default function ReclaimPage() {
       {/* Header — aligns with side panels on xl */}
       <header className="flex justify-between items-center pt-4 px-4 mb-2 mx-auto w-full max-w-4xl xl:max-w-none xl:px-[calc(50%-38.5rem)]">
         <div className="xl:w-64 xl:flex xl:justify-center">
-          <a href="/" className="flex items-center gap-3 cursor-pointer hover:opacity-90 transition-opacity">
+          <div className="flex items-center gap-3">
             <div className="flex flex-col items-center">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-solana-purple to-solana-green flex items-center justify-center">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -27,7 +27,7 @@ export default function ReclaimPage() {
               </div>
               <MobileToolDropdown />
             </div>
-            <div>
+            <a href="/" className="cursor-pointer hover:opacity-90 transition-opacity">
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-bold text-white">Reclaimer</h1>
                 <span className="hidden sm:inline-flex px-2 py-0.5 text-[10px] font-semibold bg-solana-green/20 text-solana-green rounded-full border border-solana-green/30">
@@ -40,8 +40,8 @@ export default function ReclaimPage() {
                   MAINNET
                 </span>
               </div>
-            </div>
-          </a>
+            </a>
+          </div>
         </div>
         <div className="xl:w-64 xl:flex xl:justify-center">
           <WalletButton />

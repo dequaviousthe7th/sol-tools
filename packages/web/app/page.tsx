@@ -72,7 +72,7 @@ const features = [
 
 export default function HubPage() {
   return (
-    <main className="flex-1 flex flex-col">
+    <main className="flex-1 flex flex-col pb-6">
 
       {/* Hero */}
       <section className="pt-14 sm:pt-20 pb-8 sm:pb-12 text-center px-4 relative">
