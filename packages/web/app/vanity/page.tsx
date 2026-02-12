@@ -1,18 +1,14 @@
 import { Metadata } from 'next';
 import dynamic from 'next/dynamic';
+import { WalletButton } from '@/components/WalletButton';
 
 export const metadata: Metadata = {
   title: 'Vanity Wallet Generator - SolTools',
   description: 'Generate custom Solana wallet addresses with your chosen prefix or suffix. Free, client-side, secure.',
 };
 
-const VanityGenerator = dynamic(
-  () => import('@/components/VanityGenerator').then(m => m.VanityGenerator),
-  { ssr: false }
-);
-
-const VanityFAQ = dynamic(
-  () => import('@/components/VanityFAQ').then(m => m.VanityFAQ),
+const VanityPageClient = dynamic(
+  () => import('@/components/VanityPageClient').then(m => m.VanityPageClient),
   { ssr: false }
 );
 
@@ -20,7 +16,7 @@ export default function VanityPage() {
   return (
     <main className="flex-1 flex flex-col xl:overflow-hidden">
       {/* Page header */}
-      <header className="flex items-center pt-4 px-4 mb-2 mx-auto w-full max-w-3xl">
+      <header className="flex justify-between items-center pt-4 px-4 mb-2 mx-auto w-full max-w-3xl">
         <div className="flex items-center gap-2.5">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-solana-purple to-solana-green flex items-center justify-center">
             <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -42,18 +38,10 @@ export default function VanityPage() {
             </div>
           </div>
         </div>
+        <WalletButton />
       </header>
 
-      {/* Desktop FAQ side panel */}
-      <div className="hidden xl:block">
-        <VanityFAQ />
-      </div>
-
-      {/* Content */}
-      <div className="container mx-auto px-4 pb-4 xl:pb-2 max-w-3xl flex flex-col flex-1">
-        <VanityGenerator />
-      </div>
-
+      <VanityPageClient />
     </main>
   );
 }
