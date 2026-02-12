@@ -19,7 +19,7 @@ build/
 !packages/web/public/wasm/**/*.wasm
 Cargo.lock
 
-# Environment (NEVER commit — contain API keys)
+# Environment (NEVER commit — contain API keys & secrets)
 .env
 .env.local
 .env.development
@@ -32,6 +32,7 @@ Cargo.lock
 **/.env.development
 **/.env.production
 **/.env.*.local
+**/.dev.vars
 
 # IDE
 .idea/
@@ -93,6 +94,18 @@ packages/web/app/d/
 packages/web/components/AdminDashboard.tsx
 packages/web/components/AdminLogin.tsx
 
+# Vanity token system (paid feature)
+packages/web/components/BuyTokensModal.tsx
+packages/web/components/VanityTokenCard.tsx
+packages/web/components/VanityPageClient.tsx
+
+# Hackathon screener
+packages/web/components/HackathonScreener.tsx
+packages/web/components/HackathonInfo.tsx
+packages/web/components/HackathonDetails.tsx
+packages/web/components/SubmitTokenModal.tsx
+packages/web/app/hackathon/
+
 # Planning docs
 PPlan/
 
@@ -103,7 +116,6 @@ READMEpriv.md
 .vercel/
 .wrangler/
 .cloudflare/
-**/.dev.vars
 
 # Claude Code
 .claude/

@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-1.3.0-9945FF.svg" alt="Version 1.3.0"/>
+  <img src="https://img.shields.io/badge/Version-1.4.0-9945FF.svg" alt="Version 1.4.0"/>
   <img src="https://img.shields.io/badge/License-Proprietary-red.svg" alt="License: Proprietary"/>
   <img src="https://img.shields.io/badge/Fees-0%25-14F195.svg" alt="Zero Fees"/>
 </p>
@@ -34,7 +34,8 @@
 | Tool | Route | Description |
 |------|-------|-------------|
 | **SOL Reclaimer** | `/reclaim` | Close empty token accounts and reclaim locked rent SOL |
-| **Vanity Generator** | `/vanity` | Generate custom Solana wallet addresses (client-side) |
+| **Vanity Generator** | `/vanity` | Generate custom Solana wallet addresses with token-based access |
+| **Hackathon** | `/hackathon` | Community hackathon token submissions and voting |
 
 More tools coming soon.
 
@@ -63,9 +64,21 @@ Visit **[soltools.net](https://soltools.net)** to browse all tools.
 </p>
 
 1. Go to [soltools.net/vanity](https://soltools.net/vanity)
-2. Enter a prefix or suffix
-3. Generate runs entirely in your browser via WASM
-4. Export your keypair
+2. Connect your wallet and purchase tokens (1 token = 1 search)
+3. Enter a prefix or suffix
+4. Generate runs entirely in your browser via WASM
+5. Export your keypair
+
+### Hackathon Screener
+
+<p align="center">
+  <img src="docs/preview-hackathon.png" alt="Hackathon Screener" width="800"/>
+</p>
+
+1. Go to [soltools.net/hackathon](https://soltools.net/hackathon)
+2. Browse community-submitted hackathon tokens
+3. View token details, social links, and contract addresses
+4. Vote on your favorite projects
 
 ---
 
@@ -97,9 +110,9 @@ Every token account on Solana holds ~0.00203 SOL in rent. When you swap, trade, 
 
 ## Architecture
 
-- **Web** — Next.js 14 static export with tools hub at `/`, individual tools at `/reclaim`, `/vanity`
-- **API Worker** — Cloudflare Worker with KV storage for stats, proxied RPC with method allowlist
-- **Core** — Shared TypeScript library for Solana account scanning and transaction building
+- **Web** — Next.js 14 static export with tools hub at `/`, individual tools at `/reclaim`, `/vanity`, `/hackathon`
+- **API Worker** — Cloudflare Worker with KV storage for stats, vanity tokens, analytics, proxied RPC with method allowlist
+- **Core** — Shared TypeScript library for Solana account scanning and transaction building with ALT support
 - **WASM** — Rust-compiled vanity address generator running in Web Workers
 
 ---
@@ -114,10 +127,22 @@ Every token account on Solana holds ~0.00203 SOL in rent. When you swap, trade, 
 | **Non-Custodial** | Your keys never leave your wallet |
 | **Client-Side Keygen** | Vanity generator runs entirely in-browser via WASM |
 | **Rate Limiting** | 120 req/min per IP on the API worker |
+| **On-Chain Verification** | Vanity token purchases verified on-chain before crediting |
 
 ---
 
 ## Changelog
+
+### v1.4.0
+
+**Vanity Token System & Hackathon**
+- Token-based access for vanity generator (purchase with SOL, on-chain verified)
+- 6 bundle tiers with volume discounts up to 40%
+- Unique token strings in KV for tamper-proof balance tracking
+- Hackathon page for community token submissions
+- Admin dashboard with TOTP, charts, analytics
+- Live price ticker (SOL & BTC)
+- Improved mobile layout and touch feedback
 
 ### v1.3.0
 
@@ -133,7 +158,6 @@ Every token account on Solana holds ~0.00203 SOL in rent. When you swap, trade, 
 **Mobile Support & Price Ticker**
 - Full mobile-responsive redesign
 - Mobile wallet picker with deep links
-- Live BTC and SOL price ticker
 - Address Lookup Tables for larger batch transactions
 - Touch feedback and UI polish
 
