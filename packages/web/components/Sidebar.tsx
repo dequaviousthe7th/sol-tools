@@ -39,7 +39,8 @@ export const Sidebar = ({ activePath, isOpen, onToggle }: SidebarProps) => {
       <Link href="/" className="flex items-center justify-center h-16 border-b border-[#222228] hover:opacity-90 transition-opacity">
         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-solana-purple to-solana-green flex items-center justify-center">
           <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 2L21 7V17L12 22L3 17V7Z" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 8L10.5 12.5H13.5L11 17" />
           </svg>
         </div>
       </Link>
@@ -73,6 +74,27 @@ export const Sidebar = ({ activePath, isOpen, onToggle }: SidebarProps) => {
           );
         })}
       </nav>
+
+      {/* Stats link — visually separated */}
+      <Link
+        href="/stats"
+        className={`
+          relative flex flex-col items-center justify-center py-2.5 px-1 border-t border-[#222228] transition-colors
+          ${activePath === '/stats'
+            ? 'text-solana-purple bg-solana-purple/10'
+            : 'text-gray-600 hover:text-gray-400 hover:bg-[#111113]'
+          }
+        `}
+        title="Your activity stats"
+      >
+        {activePath === '/stats' && (
+          <div className="absolute right-0 top-2 bottom-2 w-0.5 bg-solana-purple rounded-l" />
+        )}
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+        <span className="text-[9px] mt-0.5 font-medium">Stats</span>
+      </Link>
 
       {/* Collapse button */}
       <button

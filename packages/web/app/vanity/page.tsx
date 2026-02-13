@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: 'Generate custom Solana wallet addresses with your chosen prefix or suffix. Free, client-side, secure.',
 };
 
+const WalletStatsHub = dynamic(() => import('@/components/WalletStatsHub'), { ssr: false });
+
 const VanityPageClient = dynamic(
   () => import('@/components/VanityPageClient').then(m => m.VanityPageClient),
   { ssr: false }
@@ -15,7 +17,12 @@ const VanityPageClient = dynamic(
 
 export default function VanityPage() {
   return (
-    <main className="flex-1 flex flex-col xl:overflow-hidden">
+    <main className="flex-1 flex flex-col xl:overflow-hidden relative">
+      {/* My Stats pill — top right */}
+      <div className="absolute top-4 right-4 z-10">
+        <WalletStatsHub />
+      </div>
+
       {/* Page header */}
       <header className="pt-4 px-4 mb-2 mx-auto w-full max-w-3xl">
         <div className="flex justify-between items-center">

@@ -324,6 +324,49 @@ body {
   background: #444;
 }
 
+/* Stats enter animation */
+@keyframes stats-enter {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stats-enter { animation: stats-enter 0.4s ease-out forwards; }
+.stat-fade-in { animation: stats-enter 0.5s ease-out both; }
+
+/* Toast animations */
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(100%) scale(0.95); }
+  to { opacity: 1; transform: translateX(0) scale(1); }
+}
+
+@keyframes toast-out {
+  from { opacity: 1; transform: translateX(0) scale(1); }
+  to { opacity: 0; transform: translateX(100%) scale(0.95); }
+}
+
+@keyframes toast-progress-shrink {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+.toast-enter { animation: toast-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+.toast-exit { animation: toast-out 0.35s ease-in forwards; }
+.toast-progress { animation: toast-progress-shrink 4s linear forwards; }
+
+/* Mobile toast — slide up instead of from right */
+@media (max-width: 639px) {
+  @keyframes toast-in-mobile {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes toast-out-mobile {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to { opacity: 0; transform: translateY(20px) scale(0.95); }
+  }
+  .toast-enter { animation: toast-in-mobile 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .toast-exit { animation: toast-out-mobile 0.35s ease-in forwards; }
+}
+
 /* Modal animation */
 @keyframes modal-in {
   from {

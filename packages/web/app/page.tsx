@@ -1,4 +1,7 @@
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
+
+const WalletStatsHub = dynamic(() => import('../components/WalletStatsHub'), { ssr: false });
 
 const tools = [
   {
@@ -72,7 +75,12 @@ const features = [
 
 export default function HubPage() {
   return (
-    <main className="flex-1 flex flex-col pb-6">
+    <main className="flex-1 flex flex-col pb-6 relative">
+
+      {/* My Stats pill — top right, only when wallet connected */}
+      <div className="absolute top-4 right-4 z-10">
+        <WalletStatsHub />
+      </div>
 
       {/* Hero */}
       <section className="pt-14 sm:pt-20 pb-8 sm:pb-12 text-center px-4 relative">
@@ -80,7 +88,8 @@ export default function HubPage() {
         <div className="flex justify-center mb-5">
           <div className="float pulse-glow w-14 sm:w-[72px] h-14 sm:h-[72px] rounded-2xl bg-gradient-to-br from-solana-purple to-solana-green flex items-center justify-center">
             <svg className="w-8 sm:w-10 h-8 sm:h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 2L21 7V17L12 22L3 17V7Z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 8L10.5 12.5H13.5L11 17" />
             </svg>
           </div>
         </div>

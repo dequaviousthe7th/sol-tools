@@ -1,8 +1,11 @@
 import { Metadata } from 'next';
+import dynamic from 'next/dynamic';
 import { WalletButton } from '@/components/WalletButton';
 import { ClientApp } from '@/components/ClientApp';
 import { Heartbeat } from '@/components/Heartbeat';
 import { MobileToolDropdown } from '@/components/MobileToolDropdown';
+
+const WalletStatsHub = dynamic(() => import('@/components/WalletStatsHub'), { ssr: false });
 
 export const metadata: Metadata = {
   title: 'Reclaim SOL - SolTools',
@@ -11,7 +14,12 @@ export const metadata: Metadata = {
 
 export default function ReclaimPage() {
   return (
-    <main className="flex-1 flex flex-col xl:overflow-hidden xl:min-h-0">
+    <main className="flex-1 flex flex-col xl:overflow-hidden xl:min-h-0 relative">
+      {/* My Stats pill — top right */}
+      <div className="absolute top-4 right-4 z-10">
+        <WalletStatsHub />
+      </div>
+
       {/* Anonymous analytics heartbeat */}
       <Heartbeat />
 
