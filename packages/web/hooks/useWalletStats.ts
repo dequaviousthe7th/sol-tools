@@ -19,22 +19,22 @@ export interface VanityStats {
   currentBalance: number;
 }
 
-const MOCK_RECLAIM: ReclaimStats = {
-  totalSolReclaimed: 2.4819,
-  totalAccountsClosed: 47,
-  uses: 12,
+const EMPTY_RECLAIM: ReclaimStats = {
+  totalSolReclaimed: 0,
+  totalAccountsClosed: 0,
+  uses: 0,
 };
 
-const MOCK_VANITY: VanityStats = {
-  purchases: 3,
-  tokensBought: 15,
-  tokensUsed: 8,
-  totalSol: 0.45,
-  lastPurchase: Date.now() - 86400000 * 3,
-  currentBalance: 7,
+const EMPTY_VANITY: VanityStats = {
+  purchases: 0,
+  tokensBought: 0,
+  tokensUsed: 0,
+  totalSol: 0,
+  lastPurchase: 0,
+  currentBalance: 0,
 };
 
-function fetchWithTimeout(url: string, ms = 2000): Promise<Response> {
+function fetchWithTimeout(url: string, ms = 5000): Promise<Response> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), ms);
   return fetch(url, { signal: controller.signal }).finally(() => clearTimeout(timeout));
@@ -70,10 +70,10 @@ export function useWalletStats(
       return;
     }
 
-    // Use mock data when no worker URL or running locally
-    if (!WORKER_URL || WORKER_URL.includes('localhost') || WORKER_URL.includes('127.0.0.1')) {
-      if (options.reclaim) setReclaimStats(MOCK_RECLAIM);
-      if (options.vanity) setVanityStats(MOCK_VANITY);
+    // No worker URL — show empty stats (no fake data)
+    if (!WORKER_URL) {
+      if (options.reclaim) setReclaimStats(EMPTY_RECLAIM);
+      if (options.vanity) setVanityStats(EMPTY_VANITY);
       return;
     }
 
@@ -87,7 +87,7 @@ export function useWalletStats(
         fetchWithTimeout(`${WORKER_URL}/api/stats/wallet?wallet=${publicKey}`)
           .then(res => { if (!res.ok) throw new Error('not ok'); return res.json(); })
           .then((data: ReclaimStats) => { if (!cancelled) setReclaimStats(data); })
-          .catch(() => { if (!cancelled) setReclaimStats(MOCK_RECLAIM); })
+          .catch(() => { if (!cancelled) setReclaimStats(EMPTY_RECLAIM); })
       );
     }
 
@@ -96,7 +96,7 @@ export function useWalletStats(
         fetchWithTimeout(`${WORKER_URL}/api/vanity/stats?wallet=${publicKey}`)
           .then(res => { if (!res.ok) throw new Error('not ok'); return res.json(); })
           .then((data: VanityStats) => { if (!cancelled) setVanityStats(data); })
-          .catch(() => { if (!cancelled) setVanityStats(MOCK_VANITY); })
+          .catch(() => { if (!cancelled) setVanityStats(EMPTY_VANITY); })
       );
     }
 
