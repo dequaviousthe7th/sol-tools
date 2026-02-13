@@ -16,7 +16,7 @@ export default function ReclaimPage() {
   return (
     <main className="flex-1 flex flex-col xl:overflow-hidden xl:min-h-0 relative">
       {/* My Stats pill — top right */}
-      <div className="absolute top-4 right-4 z-10">
+      <div className="hidden sm:block absolute top-4 right-4 z-10">
         <WalletStatsHub />
       </div>
 

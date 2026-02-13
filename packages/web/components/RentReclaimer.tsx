@@ -2,6 +2,8 @@
 
 import { FC, useState, useCallback } from 'react';
 import { useConnection, useWallet } from '@solana/wallet-adapter-react';
+import { useWalletModal } from '@solana/wallet-adapter-react-ui';
+import { PublicKey } from '@solana/web3.js';
 import {
   RentReclaimer as RentReclaimerCore,
   ScanResult,
@@ -13,6 +15,8 @@ import { AccountList } from './AccountList';
 import { TransactionProgress } from './TransactionProgress';
 import { trackSocialClick } from './Heartbeat';
 
+const BASE58_RE = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
+
 type Status = 'idle' | 'scanning' | 'ready' | 'closing' | 'complete' | 'error';
 
 interface RentReclaimerProps {
@@ -22,17 +26,23 @@ interface RentReclaimerProps {
 export const RentReclaimer: FC<RentReclaimerProps> = ({ onBack }) => {
   const { connection } = useConnection();
   const { publicKey, signAllTransactions } = useWallet();
+  const { setVisible: openWalletModal } = useWalletModal();
 
   const [status, setStatus] = useState<Status>('idle');
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
+  const [scannedAddress, setScannedAddress] = useState<string | null>(null);
+  const [manualAddress, setManualAddress] = useState('');
   const [selectedAccounts, setSelectedAccounts] = useState<Set<string>>(new Set());
   const [closeResult, setCloseResult] = useState<CloseAccountsResult | null>(null);
   const [progress, setProgress] = useState({ current: 0, total: 0 });
   const [phase, setPhase] = useState<ClosePhase | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const isValidAddress = BASE58_RE.test(manualAddress);
+
   const handleScan = useCallback(async () => {
-    if (!publicKey) return;
+    const scanTarget = publicKey ?? (manualAddress && isValidAddress ? new PublicKey(manualAddress) : null);
+    if (!scanTarget) return;
 
     setStatus('scanning');
     setError(null);
@@ -40,7 +50,7 @@ export const RentReclaimer: FC<RentReclaimerProps> = ({ onBack }) => {
 
     try {
       try {
-        await connection.getBalance(publicKey);
+        await connection.getBalance(scanTarget);
       } catch (connErr) {
         throw new Error(`RPC connection failed: ${connErr}`);
       }
@@ -49,8 +59,9 @@ export const RentReclaimer: FC<RentReclaimerProps> = ({ onBack }) => {
         connection: connection,
       });
 
-      const result = await reclaimer.scan(publicKey);
+      const result = await reclaimer.scan(scanTarget);
       setScanResult(result);
+      setScannedAddress(scanTarget.toBase58());
 
       const allSelected = new Set(
         result.closeableAccounts.map(acc => acc.pubkey.toBase58())
@@ -62,7 +73,7 @@ export const RentReclaimer: FC<RentReclaimerProps> = ({ onBack }) => {
       setError(err instanceof Error ? err.message : 'Failed to scan wallet');
       setStatus('error');
     }
-  }, [publicKey, connection]);
+  }, [publicKey, manualAddress, isValidAddress, connection]);
 
   const handleClose = useCallback(async () => {
     if (!publicKey || !signAllTransactions || !scanResult) return;
@@ -125,6 +136,8 @@ export const RentReclaimer: FC<RentReclaimerProps> = ({ onBack }) => {
   const handleReset = useCallback(() => {
     setStatus('idle');
     setScanResult(null);
+    setScannedAddress(null);
+    setManualAddress('');
     setSelectedAccounts(new Set());
     setCloseResult(null);
     setProgress({ current: 0, total: 0 });
@@ -216,12 +229,50 @@ export const RentReclaimer: FC<RentReclaimerProps> = ({ onBack }) => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              <p className="text-gray-400 mb-8 max-w-sm mx-auto">
-                Scan your wallet to discover empty token accounts that can be closed to reclaim SOL.
-              </p>
-              <button onClick={handleScan} className="btn-primary px-8 py-3.5 sm:px-10 sm:py-4 text-base sm:text-lg">
-                Scan Wallet
-              </button>
+
+              {publicKey ? (
+                <>
+                  <p className="text-gray-400 mb-8 max-w-sm mx-auto">
+                    Scan your wallet to discover empty token accounts that can be closed to reclaim SOL.
+                  </p>
+                  <button onClick={handleScan} className="btn-primary px-8 py-3.5 sm:px-10 sm:py-4 text-base sm:text-lg">
+                    Scan Wallet
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p className="text-gray-400 mb-6 max-w-sm mx-auto">
+                    Enter a Solana wallet address to scan for reclaimable accounts
+                  </p>
+                  <div className="max-w-md mx-auto mb-6">
+                    <input
+                      type="text"
+                      value={manualAddress}
+                      onChange={(e) => setManualAddress(e.target.value.trim())}
+                      placeholder="Paste wallet address..."
+                      className="rounded-xl bg-[#0d0d0f] border border-[#222228] px-4 py-3.5 text-sm text-white placeholder-gray-600 w-full font-mono focus:outline-none focus:border-solana-purple/50 transition-colors"
+                    />
+                  </div>
+                  <button
+                    onClick={handleScan}
+                    disabled={!isValidAddress}
+                    className="btn-primary px-8 py-3.5 sm:px-10 sm:py-4 text-base sm:text-lg"
+                  >
+                    Scan
+                  </button>
+                  <div className="flex items-center gap-3 justify-center mt-6">
+                    <div className="h-px w-12 bg-[#222228]"></div>
+                    <span className="text-xs text-gray-600">or</span>
+                    <div className="h-px w-12 bg-[#222228]"></div>
+                  </div>
+                  <button
+                    onClick={() => openWalletModal(true)}
+                    className="mt-4 text-sm text-gray-400 hover:text-solana-purple transition-colors"
+                  >
+                    Connect Wallet
+                  </button>
+                </>
+              )}
             </div>
           </div>
         )}
@@ -270,13 +321,27 @@ export const RentReclaimer: FC<RentReclaimerProps> = ({ onBack }) => {
                   onDeselectAll={deselectAll}
                 />
 
-                <button
-                  onClick={handleClose}
-                  disabled={selectedAccounts.size === 0}
-                  className="w-full mt-6 btn-primary py-3.5 sm:py-4 text-base sm:text-lg"
-                >
-                  Close {selectedAccounts.size} Account{selectedAccounts.size !== 1 ? 's' : ''} & Reclaim {formatSol(selectedReclaimable)} SOL
-                </button>
+                {publicKey && scannedAddress === publicKey.toBase58() ? (
+                  <button
+                    onClick={handleClose}
+                    disabled={selectedAccounts.size === 0}
+                    className="w-full mt-6 btn-primary py-3.5 sm:py-4 text-base sm:text-lg"
+                  >
+                    Close {selectedAccounts.size} Account{selectedAccounts.size !== 1 ? 's' : ''} & Reclaim {formatSol(selectedReclaimable)} SOL
+                  </button>
+                ) : (
+                  <div className="mt-6 text-center">
+                    <button
+                      onClick={() => openWalletModal(true)}
+                      className="w-full btn-primary py-3.5 sm:py-4 text-base sm:text-lg"
+                    >
+                      Connect Wallet to Reclaim
+                    </button>
+                    <p className="text-xs text-gray-500 mt-2">
+                      You need to connect the wallet you scanned to close accounts
+                    </p>
+                  </div>
+                )}
               </>
             ) : (
               <div className="text-center py-12">

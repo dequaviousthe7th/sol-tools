@@ -5,7 +5,6 @@ import dynamic from 'next/dynamic';
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { useProvidersLoaded } from './LazyProviders';
 import { useSidebarOpen } from './ToolLayout';
-import { WalletButton } from './WalletButton';
 import { InfoModal } from './InfoModal';
 import { GlobalStats } from './GlobalStats';
 import { RecentActivity } from './RecentActivity';
@@ -237,13 +236,9 @@ const HeroSection = ({ connected, onGetStarted, onOpenInfo }: { connected: boole
     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 xl:mb-4">
       <div className="gradient-border">
         <div className="px-6 py-3">
-          {connected ? (
-            <button onClick={onGetStarted} className="btn-primary px-8 py-3">
-              Get Started
-            </button>
-          ) : (
-            <WalletButton />
-          )}
+          <button onClick={onGetStarted} className="btn-primary px-8 py-3">
+            Get Started
+          </button>
         </div>
       </div>
     </div>
@@ -362,25 +357,10 @@ const ClientAppInner = () => {
   const [showReclaimer, setShowReclaimer] = useState(false);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
 
-  // When wallet disconnects, reset to hero
-  if (!connected && showReclaimer) {
-    setShowReclaimer(false);
-  }
-
-  if (!connected) {
-    return (
-      <>
-        <HeroSection connected={false} onOpenInfo={() => setInfoModalOpen(true)} />
-        <InfoModal open={infoModalOpen} onClose={() => setInfoModalOpen(false)} />
-        <SidePanels />
-      </>
-    );
-  }
-
   if (!showReclaimer) {
     return (
       <>
-        <HeroSection connected={true} onGetStarted={() => setShowReclaimer(true)} onOpenInfo={() => setInfoModalOpen(true)} />
+        <HeroSection connected={connected} onGetStarted={() => setShowReclaimer(true)} onOpenInfo={() => setInfoModalOpen(true)} />
         <InfoModal open={infoModalOpen} onClose={() => setInfoModalOpen(false)} />
         <SidePanels />
       </>
