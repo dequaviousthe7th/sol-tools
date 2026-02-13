@@ -1,13 +1,8 @@
 'use client';
 
-import { useWallet } from '@solana/wallet-adapter-react';
 import Link from 'next/link';
 
 export default function WalletStatsHub() {
-  const { connected } = useWallet();
-
-  if (!connected) return null;
-
   return (
     <Link
       href="/stats"
