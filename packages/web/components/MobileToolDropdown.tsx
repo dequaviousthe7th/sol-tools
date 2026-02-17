@@ -10,6 +10,8 @@ const MOBILE_TOOLS = [
   { id: 'reclaim', label: 'Reclaim', href: '/reclaim', description: 'Reclaim locked SOL' },
   { id: 'vanity', label: 'Vanity', href: '/vanity', description: 'Vanity address generator' },
   { id: 'hackathon', label: 'Hackathon', href: '/hackathon', description: 'Hackathon screener' },
+  { id: 'scan', label: 'Scanner', href: '/scan', description: 'Token safety scanner' },
+  { id: 'xray', label: 'X-Ray', href: '/xray', description: 'Wallet PnL analysis' },
   { id: 'stats', label: 'My Stats', href: '/stats', description: 'Your activity & achievements' },
 ] as const;
 

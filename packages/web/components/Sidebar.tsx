@@ -21,6 +21,18 @@ export const TOOLS = [
     href: '/hackathon',
     description: 'PumpFun Build in Public hackathon screener',
   },
+  {
+    id: 'scan',
+    label: 'Scanner',
+    href: '/scan',
+    description: 'Scan any Solana token for risks',
+  },
+  {
+    id: 'xray',
+    label: 'X-Ray',
+    href: '/xray',
+    description: 'Wallet PnL and trading analysis',
+  },
 ] as const;
 
 interface SidebarProps {
@@ -129,6 +141,19 @@ export function ToolIcon({ id }: { id: string }) {
         <svg className="w-5 h-3" viewBox="0 0 20 12" fill="none">
           <rect x="0.5" y="0.5" width="19" height="11" rx="5.5" fill="white" stroke="currentColor" strokeWidth="1" />
           <path d="M10 0.5H14.5C17.2614 0.5 19.5 2.73858 19.5 5.5V6.5C19.5 9.26142 17.2614 11.5 14.5 11.5H10V0.5Z" fill="#82e24c" stroke="currentColor" strokeWidth="1" />
+        </svg>
+      );
+    case 'scan':
+      return (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+      );
+    case 'xray':
+      return (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
         </svg>
       );
     default:

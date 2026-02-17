@@ -65,6 +65,47 @@ const tools = [
       </svg>
     ),
   },
+  {
+    id: 'scan',
+    title: 'Token Scanner',
+    badge: 'FREE',
+    badgeClass: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30',
+    description: 'Instant safety reports for any Solana token. Check risk scores, holder concentration, LP status, and market data before you buy.',
+    href: '/scan',
+    accentFrom: 'from-cyan-500',
+    accentTo: 'to-blue-500',
+    iconBg: 'from-cyan-500/10 to-blue-500/10',
+    iconColor: 'text-cyan-400',
+    hoverBorder: 'group-hover:border-cyan-500/40 group-hover:shadow-[0_0_15px_rgba(6,182,212,0.15)]',
+    linkColor: 'text-cyan-400',
+    dotColor: 'bg-cyan-500/60 group-hover:bg-cyan-400',
+    icon: (
+      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+      </svg>
+    ),
+  },
+  {
+    id: 'xray',
+    title: 'Wallet X-Ray',
+    badge: 'FREE',
+    badgeClass: 'bg-amber-500/20 text-amber-400 border-amber-500/30',
+    description: 'See any wallet\'s true trading performance. PnL breakdown, win rate, trader grade, and per-token analysis — no wallet connection needed.',
+    href: '/xray',
+    accentFrom: 'from-amber-500',
+    accentTo: 'to-orange-500',
+    iconBg: 'from-amber-500/10 to-orange-500/10',
+    iconColor: 'text-amber-400',
+    hoverBorder: 'group-hover:border-amber-500/40 group-hover:shadow-[0_0_15px_rgba(245,158,11,0.15)]',
+    linkColor: 'text-amber-400',
+    dotColor: 'bg-amber-500/60 group-hover:bg-amber-400',
+    icon: (
+      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+      </svg>
+    ),
+  },
 ];
 
 const features = [
@@ -165,7 +206,7 @@ export default function HubPage() {
           </div>
           <div>
             <p className="text-gray-500 text-xs font-medium">More tools coming soon</p>
-            <p className="text-gray-600 text-[11px] mt-0.5">Token analytics, portfolio tracker, and more in the works.</p>
+            <p className="text-gray-600 text-[11px] mt-0.5">Exit strategy calculator, dev toolkit, and more in the works.</p>
           </div>
         </div>
       </section>
