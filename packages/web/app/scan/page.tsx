@@ -24,7 +24,7 @@ export default function ScanPage() {
 
       <Heartbeat />
 
-      <header className="pt-4 px-4 mb-2 mx-auto w-full max-w-3xl">
+      <header className="pt-4 px-4 sm:px-6 lg:px-8 mb-2">
         <div className="flex items-center gap-2.5">
           <div className="flex flex-col items-center">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center">
@@ -51,10 +51,8 @@ export default function ScanPage() {
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto scroll-fade px-4 pb-4">
-        <div className="max-w-3xl mx-auto">
-          <TokenScannerClient />
-        </div>
+      <div className="flex-1 overflow-y-auto scroll-fade px-4 sm:px-6 lg:px-8 pb-4">
+        <TokenScannerClient />
       </div>
     </main>
   );

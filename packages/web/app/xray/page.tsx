@@ -24,7 +24,7 @@ export default function XRayPage() {
 
       <Heartbeat />
 
-      <header className="pt-4 px-4 mb-2 mx-auto w-full max-w-3xl">
+      <header className="pt-4 px-4 sm:px-6 lg:px-8 mb-2">
         <div className="flex items-center gap-2.5">
           <div className="flex flex-col items-center">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center">
@@ -52,10 +52,8 @@ export default function XRayPage() {
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto scroll-fade px-4 pb-4">
-        <div className="max-w-3xl mx-auto">
-          <WalletXRayClient />
-        </div>
+      <div className="flex-1 overflow-y-auto scroll-fade px-4 sm:px-6 lg:px-8 pb-4">
+        <WalletXRayClient />
       </div>
     </main>
   );
