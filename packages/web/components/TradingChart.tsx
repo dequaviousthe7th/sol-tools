@@ -55,20 +55,23 @@ export default function TradingChart({
   const [activeRange, setActiveRange] = useState<string>(ranges?.[ranges.length - 1]?.label || 'Max');
   const [isMobile, setIsMobile] = useState(false);
   const initRef = useRef(false);
+  const latestDataRef = useRef(data);
+  latestDataRef.current = data;
+  const hasData = data.length > 0;
   const formatFn = priceFormatter || defaultFormatPrice;
 
   useEffect(() => {
     setIsMobile(window.innerWidth < 640);
   }, []);
 
-  // Create chart once
+  // Create chart once (re-runs when data first becomes available)
   useEffect(() => {
-    if (!containerRef.current || data.length === 0) return;
+    if (!containerRef.current || !hasData) return;
 
     // If chart already exists, just update data
     if (chartRef.current && seriesRef.current) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      seriesRef.current.setData(data as any);
+      seriesRef.current.setData(latestDataRef.current as any);
       return;
     }
 
@@ -150,8 +153,9 @@ export default function TradingChart({
         },
       });
 
+      // Use ref to get the absolute latest data (may have updated during async import)
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      series.setData(data as any);
+      series.setData(latestDataRef.current as any);
       chart.timeScale().fitContent();
 
       chartRef.current = chart;
@@ -181,9 +185,9 @@ export default function TradingChart({
       seriesRef.current = null;
       initRef.current = false;
     };
-  // Re-create chart only on type/color/height change, not on data change
+  // Re-create chart only on type/color/height change, or when data first becomes available
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type, color, height, mobileHeight, isMobile]);
+  }, [type, color, height, mobileHeight, isMobile, hasData]);
 
   // Update data without re-creating chart
   useEffect(() => {

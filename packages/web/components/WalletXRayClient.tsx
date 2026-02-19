@@ -465,9 +465,18 @@ function SavedWalletRow({
 
       {/* Balance */}
       <div className="text-right w-24 sm:w-28 flex-shrink-0">
-        <span className="text-gray-300 text-xs">
-          {wallet.balanceSol !== null ? `◎ ${wallet.balanceSol.toFixed(2)}` : '—'}
-        </span>
+        {wallet.balanceSol !== null ? (
+          <span className="text-gray-300 text-xs inline-flex items-center gap-1">
+            <svg className="w-3 h-3 flex-shrink-0" viewBox="0 0 397.7 311.7" fill="currentColor">
+              <path d="M64.6 237.9c2.4-2.4 5.7-3.8 9.2-3.8h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1l62.7-62.7z"/>
+              <path d="M64.6 3.8C67.1 1.4 70.4 0 73.8 0h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1L64.6 3.8z"/>
+              <path d="M333.1 120.1c-2.4-2.4-5.7-3.8-9.2-3.8H6.5c-5.8 0-8.7 7-4.6 11.1l62.7 62.7c2.4 2.4 5.7 3.8 9.2 3.8h317.4c5.8 0 8.7-7 4.6-11.1l-62.7-62.7z"/>
+            </svg>
+            {wallet.balanceSol.toFixed(2)}
+          </span>
+        ) : (
+          <span className="text-gray-300 text-xs">—</span>
+        )}
       </div>
 
       {/* Last Active — hidden on mobile */}
@@ -1063,8 +1072,14 @@ export default function WalletXRayClient() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
           </button>
+          {(() => {
+            const saved = savedWallets.wallets.find(w => w.address === result.wallet);
+            return saved ? (
+              <span className="text-2xl flex-shrink-0" title={saved.name}>{saved.emoji}</span>
+            ) : null;
+          })()}
           <div>
-            <p className="text-gray-500 text-[10px] uppercase tracking-wider">Wallet</p>
+            <p className="text-gray-500 text-[10px] uppercase tracking-wider">{savedWallets.wallets.find(w => w.address === result.wallet)?.name || 'Wallet'}</p>
             <div className="flex items-center gap-1.5">
               <p className="text-white text-sm font-mono">{truncateWallet(result.wallet)}</p>
               <button
