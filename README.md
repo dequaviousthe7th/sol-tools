@@ -50,7 +50,7 @@ Visit **[soltools.net](https://soltools.net)** to browse all tools.
 ### SOL Reclaimer
 
 <p align="center">
-  <img src="docs/preview.png" alt="SOL Reclaimer" width="800"/>
+  <img src="docs/preview-reclaim.png" alt="SOL Reclaimer" width="800"/>
 </p>
 
 1. Go to [soltools.net/reclaim](https://soltools.net/reclaim)
@@ -73,17 +73,29 @@ Visit **[soltools.net](https://soltools.net)** to browse all tools.
 
 ### Token Scanner
 
+<p align="center">
+  <img src="docs/preview-scanner.png" alt="Token Scanner" width="800"/>
+</p>
+
 1. Go to [soltools.net/scan](https://soltools.net/scan)
 2. Enter any Solana token address
 3. Get an instant safety report with risk score, holder concentration, LP status, and market data
-4. View live chart with market cap overlay and DEX badge
+4. View live chart with market cap overlay
 
 ### Wallet X-Ray
+
+<p align="center">
+  <img src="docs/preview-xray.png" alt="Wallet X-Ray" width="800"/>
+</p>
 
 1. Go to [soltools.net/xray](https://soltools.net/xray)
 2. Enter any wallet address (no connection needed)
 3. View trader grade (A+ to F), PnL breakdown, win rate, and per-token trade history
 4. Save wallets to track balances and quickly re-analyze them
+
+<p align="center">
+  <img src="docs/preview-xray-tracked.png" alt="Wallet X-Ray — Tracked Wallets" width="800"/>
+</p>
 
 ---
 
@@ -105,7 +117,7 @@ Every token account on Solana holds ~0.00203 SOL in rent. When you swap, trade, 
 | Feature | Description |
 |---------|-------------|
 | **Zero Fees** | Unlike other tools that take 5-10%, we take nothing |
-| **Batch Processing** | Close up to 15 accounts per transaction using Address Lookup Tables |
+| **Batch Processing** | Close up to 15 accounts per transaction |
 | **Safe** | Only closes accounts with zero balance |
 | **Non-Custodial** | Your keys never leave your wallet |
 | **Secure** | Transactions are simulated before execution |
@@ -131,19 +143,18 @@ The vanity generator creates Solana keypairs with custom prefixes or suffixes. A
 | Feature | Description |
 |---------|-------------|
 | **Client-Side** | Runs entirely in your browser — works offline after page load |
-| **Rust WASM** | Compiled Rust for near-native performance via WebAssembly |
-| **Multi-Threaded** | Parallel Web Workers use all available CPU cores |
+| **Multi-Threaded** | Uses all available CPU cores for fast generation |
 | **Secure** | Private keys are generated locally and never transmitted |
 | **Flexible** | Choose prefix, suffix, or both (1-4 characters each) |
-| **Token Access** | 1 token per search, purchased with SOL and verified on-chain |
+| **Token Access** | 1 token per search, purchased with SOL |
 
 ---
 
 ## Architecture
 
 - **Web** — Next.js 14 static export with tools hub at `/`, individual tools at `/reclaim`, `/vanity`, `/scan`, `/xray`
-- **API Worker** — Edge-deployed worker with KV storage for vanity tokens, proxied RPC with method allowlist
-- **Core** — Shared TypeScript library for Solana account scanning and transaction building with ALT support
+- **API Worker** — Edge-deployed worker for proxied RPC and backend services
+- **Core** — Shared TypeScript library for Solana account scanning and transaction building
 - **WASM** — Rust-compiled vanity address generator running in Web Workers
 
 ---
@@ -152,13 +163,12 @@ The vanity generator creates Solana keypairs with custom prefixes or suffixes. A
 
 | Aspect | Implementation |
 |--------|----------------|
-| **No Private Keys on Server** | Web app uses wallet adapter (client-side signing) |
-| **RPC Proxy** | API worker proxies RPC calls with method allowlist — API key never exposed |
+| **No Private Keys on Server** | Client-side signing via wallet adapter |
+| **RPC Proxy** | API worker proxies RPC calls — keys never exposed |
 | **Transaction Simulation** | All transactions simulated before execution |
 | **Non-Custodial** | Your keys never leave your wallet |
-| **Client-Side Keygen** | Vanity generator runs entirely in-browser via WASM |
-| **Rate Limiting** | 120 req/min per IP on the API worker |
-| **On-Chain Verification** | Vanity token purchases verified on-chain before crediting |
+| **Client-Side Keygen** | Vanity generator runs entirely in-browser |
+| **Rate Limiting** | Per-IP rate limiting on the API worker |
 
 ---
 
@@ -166,65 +176,56 @@ The vanity generator creates Solana keypairs with custom prefixes or suffixes. A
 
 ### v1.6.0
 
-**Token Scanner, Wallet X-Ray & UI Overhaul**
-- Token Scanner — instant safety reports with risk scores, holder analysis, LP status, and live chart
-- Wallet X-Ray — full PnL breakdown, trader grades, win rate, per-token history, and USD values
-- Saved wallets system with localStorage persistence, live balance fetching, import/export, and emoji labels
-- X-Ray idle screen redesign with dashboard mode (full-width tracked wallets table) and empty mode (centered hero)
-- Compact home page layout with smaller hero and tighter tool cards
-- Unified visual theme — all page icons and card accents use solana purple-green gradient
-- Hackathon screener disabled and hidden from navigation (code preserved for future events)
-- Sidebar expand button moved to bottom-left to avoid overlapping page content
-- Full-width layout for scanner and xray pages
-- Smart price formatter and right-click reset on charts
+**Token Scanner, Wallet X-Ray & UI Refresh**
+- New tool: Token Scanner with safety reports, risk scores, and live charts
+- New tool: Wallet X-Ray with PnL breakdown, trader grades, and per-token history
+- Saved wallets with import/export and live balance tracking
+- Redesigned X-Ray idle screen with dashboard and empty modes
+- Compact home page layout with unified visual theme
+- Hackathon screener disabled (code preserved for future events)
+- Various UI and layout improvements
 
 ### v1.5.0
 
 **Hackathon Screener & Mobile Polish**
-- Hackathon screener with live DexScreener data, sorting, search, and token submissions
+- Hackathon screener with live market data, sorting, and search
 - Full mobile-responsive pass across all pages
-- Collapsible sidebar panel positioning fixes
-- Touch feedback and UI polish
+- UI polish and bug fixes
 
 ### v1.4.0
 
 **Vanity Token System**
-- Token-based access for vanity generator (purchase with SOL, on-chain verified)
-- 6 bundle tiers with volume discounts up to 40%
+- Token-based access for vanity generator
+- 6 bundle tiers with volume discounts
 - Live price ticker (SOL & BTC)
-- Improved mobile layout and touch feedback
+- Improved mobile layout
 
 ### v1.3.0
 
 **SolTools Rebrand & Tools Hub**
 - Rebranded from SolReclaimer to SolTools
-- New tools hub homepage at `/` with tool cards
-- Vanity address generator with Rust WASM engine and multi-threaded Web Workers
-- Collapsible sidebar and bottom nav for tool switching
-- Mobile wallet picker with deep links for Phantom, Solflare, Backpack, Coinbase, Trust
+- New tools hub homepage with tool cards
+- Vanity address generator
+- Collapsible sidebar and bottom nav
 
 ### v1.2.0
 
 **Mobile Support & Price Ticker**
 - Full mobile-responsive redesign
-- Mobile wallet picker with deep links
-- Address Lookup Tables for larger batch transactions
-- Touch feedback and UI polish
+- Batch transaction improvements
 
 ### v1.1.0
 
 **Live Dashboard & Backend**
-- Live activity feed showing recent reclaims
-- Edge-deployed API worker with KV-backed stats and RPC proxy
-- Per-IP rate limiting (120 req/min)
+- Live activity feed
+- Edge-deployed API worker
 
 ### v1.0.0
 
 **Initial Release**
 - Zero-fee rent reclaiming with batch processing
-- Solana wallet adapter integration with non-custodial signing
-- Transaction simulation before execution
-- Responsive UI with gradient design system
+- Solana wallet adapter integration
+- Transaction simulation
 
 ---
 
