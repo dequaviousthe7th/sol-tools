@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
+import { useSavedWallets, type SavedWalletWithLive } from '../hooks/useSavedWallets';
 
 const TradingChart = dynamic(() => import('./TradingChart'), { ssr: false });
 
@@ -306,6 +307,190 @@ function PaginationControls({
   );
 }
 
+/* ─── Emoji Picker & Saved Wallet Helpers ─── */
+
+const EMOJI_OPTIONS = [
+  '🤖','👻','🦊','🐙','🦈','🐋','🐺','🦅','🦁','🐯',
+  '💜','💎','🔥','⚡','🎯','🎲','🚀','💰','🪙','👑',
+  '🌊','🌙','⭐','🎭','🧪','🔮','📊','🏆','🐸','🦑',
+  '🐍','🦇','🐝','🦋','🐢','🦎','🎵','💣','🗡️','🛡️',
+  '🔴','🟢','🔵','🟡','🟣','⚪','🖤','💚','💙','🧡',
+  '❤️','🔑','🌀','❄️','🏴‍☠️','🪲','🦂','⚔️','🧲','🎪',
+];
+
+function EmojiPicker({ current, onSelect, onClose }: { current: string; onSelect: (e: string) => void; onClose: () => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) onClose();
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [onClose]);
+
+  return (
+    <div ref={ref} className="absolute z-50 bg-[#111113] border border-[#1a1a1f] rounded-xl shadow-2xl p-3 grid grid-cols-6 gap-1.5 w-[220px]" onClick={e => e.stopPropagation()}>
+      {EMOJI_OPTIONS.map(emoji => (
+        <button
+          key={emoji}
+          onClick={(e) => { e.stopPropagation(); onSelect(emoji); }}
+          className={`w-8 h-8 flex items-center justify-center rounded-lg text-base hover:bg-white/10 transition-colors ${emoji === current ? 'bg-amber-500/20 ring-1 ring-amber-500/50' : ''}`}
+        >
+          {emoji}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+function formatRelativeTime(tsMs: number | null): string {
+  if (!tsMs) return '—';
+  const diff = Date.now() - tsMs;
+  if (diff < 0) return 'Just now';
+  const seconds = Math.floor(diff / 1000);
+  if (seconds < 60) return 'Just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  const months = Math.floor(days / 30);
+  return `${months}mo ago`;
+}
+
+function SavedWalletRow({
+  wallet,
+  onAnalyze,
+  onRemove,
+  onUpdateName,
+  onUpdateEmoji,
+}: {
+  wallet: SavedWalletWithLive;
+  onAnalyze: (address: string) => void;
+  onRemove: (address: string) => void;
+  onUpdateName: (address: string, name: string) => void;
+  onUpdateEmoji: (address: string, emoji: string) => void;
+}) {
+  const [editing, setEditing] = useState(false);
+  const [editName, setEditName] = useState(wallet.name);
+  const [showPicker, setShowPicker] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (editing && inputRef.current) inputRef.current.focus();
+  }, [editing]);
+
+  const handleNameSubmit = () => {
+    const trimmed = editName.trim();
+    if (trimmed && trimmed !== wallet.name) {
+      onUpdateName(wallet.address, trimmed);
+    } else {
+      setEditName(wallet.name);
+    }
+    setEditing(false);
+  };
+
+  const copyAddr = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      await navigator.clipboard.writeText(wallet.address);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch { /* ignore */ }
+  };
+
+  const shortAddr = `${wallet.address.slice(0, 4)}...${wallet.address.slice(-4)}`;
+  const smShortAddr = `${wallet.address.slice(0, 4)}...${wallet.address.slice(-3)}`;
+
+  return (
+    <div
+      onClick={() => onAnalyze(wallet.address)}
+      className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5 hover:bg-white/[0.02] cursor-pointer transition-colors group relative"
+    >
+      {/* Emoji */}
+      <div className="relative">
+        <button
+          onClick={(e) => { e.stopPropagation(); setShowPicker(!showPicker); }}
+          className="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors text-base"
+        >
+          {wallet.emoji}
+        </button>
+        {showPicker && (
+          <div className="absolute left-0 top-full mt-1">
+            <EmojiPicker
+              current={wallet.emoji}
+              onSelect={(e) => { onUpdateEmoji(wallet.address, e); setShowPicker(false); }}
+              onClose={() => setShowPicker(false)}
+            />
+          </div>
+        )}
+      </div>
+
+      {/* Name */}
+      <div className="min-w-0 flex-shrink-0 w-20 sm:w-28">
+        {editing ? (
+          <input
+            ref={inputRef}
+            value={editName}
+            onChange={e => setEditName(e.target.value)}
+            onBlur={handleNameSubmit}
+            onKeyDown={e => { if (e.key === 'Enter') handleNameSubmit(); if (e.key === 'Escape') { setEditName(wallet.name); setEditing(false); } }}
+            onClick={e => e.stopPropagation()}
+            className="w-full bg-transparent border-b border-amber-500/50 text-white text-xs outline-none py-0.5"
+            maxLength={20}
+          />
+        ) : (
+          <button
+            onClick={(e) => { e.stopPropagation(); setEditing(true); }}
+            className="text-white text-xs truncate block max-w-full hover:text-amber-400 transition-colors"
+            title="Click to rename"
+          >
+            {wallet.name}
+          </button>
+        )}
+      </div>
+
+      {/* Address */}
+      <button
+        onClick={copyAddr}
+        className="text-gray-500 text-[11px] font-mono hover:text-amber-400 transition-colors flex-shrink-0"
+        title={wallet.address}
+      >
+        <span className="hidden sm:inline">{copied ? 'Copied!' : shortAddr}</span>
+        <span className="sm:hidden">{copied ? 'Copied!' : smShortAddr}</span>
+      </button>
+
+      {/* Balance */}
+      <div className="text-right flex-1 min-w-0">
+        <span className="text-gray-300 text-xs">
+          {wallet.balanceSol !== null ? `◎ ${wallet.balanceSol.toFixed(2)}` : '—'}
+        </span>
+      </div>
+
+      {/* Last Active — hidden on mobile */}
+      <div className="hidden sm:block text-right w-20 flex-shrink-0">
+        <span className="text-gray-500 text-[11px]">
+          {formatRelativeTime(wallet.lastActive)}
+        </span>
+      </div>
+
+      {/* Delete */}
+      <button
+        onClick={(e) => { e.stopPropagation(); onRemove(wallet.address); }}
+        className="p-1.5 rounded-lg text-gray-600 hover:text-red-400 hover:bg-red-500/10 transition-colors opacity-0 group-hover:opacity-100 flex-shrink-0"
+        title="Remove wallet"
+      >
+        <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+      </button>
+    </div>
+  );
+}
+
 /* ─── Main Component ─── */
 
 export default function WalletXRayClient() {
@@ -318,6 +503,11 @@ export default function WalletXRayClient() {
   const [chartLoading, setChartLoading] = useState(false);
   const [solPrice, setSolPrice] = useState(0);
   const [copied, setCopied] = useState(false);
+
+  // Saved wallets
+  const savedWallets = useSavedWallets();
+  const [importMsg, setImportMsg] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Per-tab sort states
   const [topSort, setTopSort] = useState<SortState>({ key: 'pnl', dir: 'desc' });
@@ -460,7 +650,44 @@ export default function WalletXRayClient() {
 
   /* ──────────────────── IDLE STATE ──────────────────── */
 
+  const handleImportFile = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      const text = reader.result as string;
+      const result = savedWallets.importWallets(text);
+      setImportMsg(`Added ${result.added}, skipped ${result.skipped}${result.errors > 0 ? `, ${result.errors} invalid` : ''}`);
+      setTimeout(() => setImportMsg(null), 3000);
+    };
+    reader.readAsText(file);
+    // Reset file input so same file can be re-imported
+    e.target.value = '';
+  }, [savedWallets]);
+
+  const handleExport = useCallback(() => {
+    const data = savedWallets.exportWallets();
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `xray-wallets-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [savedWallets]);
+
+  const handleSaveWallet = useCallback(() => {
+    const addr = input.trim();
+    if (isValidBase58(addr) && !savedWallets.hasWallet(addr)) {
+      savedWallets.addWallet(addr);
+    }
+  }, [input, savedWallets]);
+
   if (state === 'idle') {
+    const hasSaved = savedWallets.wallets.length > 0;
+    const validInput = isValidBase58(input.trim());
+    const canSave = validInput && !savedWallets.hasWallet(input.trim());
+
     return (
       <div className="flex flex-col items-center justify-center py-12 sm:py-16">
         {/* Floating animated eye icon */}
@@ -482,58 +709,60 @@ export default function WalletXRayClient() {
           Uncover any trader&apos;s full performance history, win rate, PnL breakdown, and trading grade.
         </p>
 
-        {/* Feature cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-xl mb-8">
-          {[
-            {
-              icon: (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                </svg>
-              ),
-              title: 'Trader Grade',
-              desc: 'A+ to F rating based on performance',
-              color: 'text-amber-400',
-              border: 'border-amber-500/10 hover:border-amber-500/30',
-              bg: 'bg-amber-500/5',
-            },
-            {
-              icon: (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                </svg>
-              ),
-              title: 'PnL Breakdown',
-              desc: 'Realized vs unrealized profit/loss',
-              color: 'text-green-400',
-              border: 'border-green-500/10 hover:border-green-500/30',
-              bg: 'bg-green-500/5',
-            },
-            {
-              icon: (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                </svg>
-              ),
-              title: 'Token History',
-              desc: 'Per-token performance & trade details',
-              color: 'text-purple-400',
-              border: 'border-purple-500/10 hover:border-purple-500/30',
-              bg: 'bg-purple-500/5',
-            },
-          ].map((feature) => (
-            <div
-              key={feature.title}
-              className={`card card-hover p-4 text-center ${feature.border} transition-all duration-300`}
-            >
-              <div className={`w-10 h-10 rounded-xl ${feature.bg} flex items-center justify-center mx-auto mb-2.5 ${feature.color}`}>
-                {feature.icon}
+        {/* Feature cards — only show when no saved wallets */}
+        {!hasSaved && (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-xl mb-8">
+            {[
+              {
+                icon: (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                  </svg>
+                ),
+                title: 'Trader Grade',
+                desc: 'A+ to F rating based on performance',
+                color: 'text-amber-400',
+                border: 'border-amber-500/10 hover:border-amber-500/30',
+                bg: 'bg-amber-500/5',
+              },
+              {
+                icon: (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                  </svg>
+                ),
+                title: 'PnL Breakdown',
+                desc: 'Realized vs unrealized profit/loss',
+                color: 'text-green-400',
+                border: 'border-green-500/10 hover:border-green-500/30',
+                bg: 'bg-green-500/5',
+              },
+              {
+                icon: (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                ),
+                title: 'Token History',
+                desc: 'Per-token performance & trade details',
+                color: 'text-purple-400',
+                border: 'border-purple-500/10 hover:border-purple-500/30',
+                bg: 'bg-purple-500/5',
+              },
+            ].map((feature) => (
+              <div
+                key={feature.title}
+                className={`card card-hover p-4 text-center ${feature.border} transition-all duration-300`}
+              >
+                <div className={`w-10 h-10 rounded-xl ${feature.bg} flex items-center justify-center mx-auto mb-2.5 ${feature.color}`}>
+                  {feature.icon}
+                </div>
+                <h3 className="text-white text-sm font-semibold mb-1">{feature.title}</h3>
+                <p className="text-gray-500 text-xs leading-relaxed">{feature.desc}</p>
               </div>
-              <h3 className="text-white text-sm font-semibold mb-1">{feature.title}</h3>
-              <p className="text-gray-500 text-xs leading-relaxed">{feature.desc}</p>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Input */}
         <div className="w-full max-w-xl">
@@ -549,15 +778,109 @@ export default function WalletXRayClient() {
             />
             <button
               onClick={analyze}
-              disabled={!isValidBase58(input.trim())}
+              disabled={!validInput}
               className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-semibold text-sm disabled:opacity-30 disabled:cursor-not-allowed hover:opacity-90 hover:shadow-[0_0_25px_rgba(245,158,11,0.3)] active:scale-[0.98] transition-all"
             >
               Analyze
             </button>
+            {canSave && (
+              <button
+                onClick={handleSaveWallet}
+                className="px-3 py-3.5 rounded-xl border border-[#1a1a1f] text-gray-400 hover:text-amber-400 hover:border-amber-500/30 transition-all flex-shrink-0"
+                title="Save wallet"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 4v16m8-8H4" />
+                </svg>
+              </button>
+            )}
           </div>
           <p className="text-gray-600 text-xs text-center mt-3">
             No wallet connection needed
           </p>
+        </div>
+
+        {/* Hidden file input for import */}
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept=".json,.txt"
+          onChange={handleImportFile}
+          className="hidden"
+        />
+
+        {/* Saved Wallets Card */}
+        <div className="w-full max-w-2xl mt-8">
+          <div className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl overflow-hidden">
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-3 border-b border-[#1a1a1f]">
+              <h3 className="text-white text-sm font-semibold">
+                Saved Wallets{hasSaved ? ` (${savedWallets.wallets.length})` : ''}
+                {savedWallets.loading && (
+                  <span className="ml-2 inline-block w-3 h-3 border border-amber-500/30 border-t-amber-400 rounded-full animate-spin align-middle" />
+                )}
+              </h3>
+              <div className="flex items-center gap-1.5">
+                {importMsg && (
+                  <span className="text-amber-400 text-[11px] mr-2">{importMsg}</span>
+                )}
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="px-2.5 py-1.5 rounded-lg border border-[#1a1a1f] text-gray-400 text-[11px] hover:text-amber-400 hover:border-amber-500/30 transition-all"
+                  title="Import wallets"
+                >
+                  <span className="hidden sm:inline">Import</span>
+                  <svg className="w-3.5 h-3.5 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                  </svg>
+                </button>
+                {hasSaved && (
+                  <>
+                    <button
+                      onClick={handleExport}
+                      className="px-2.5 py-1.5 rounded-lg border border-[#1a1a1f] text-gray-400 text-[11px] hover:text-amber-400 hover:border-amber-500/30 transition-all"
+                      title="Export wallets"
+                    >
+                      <span className="hidden sm:inline">Export</span>
+                      <svg className="w-3.5 h-3.5 sm:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={savedWallets.removeAll}
+                      className="px-2.5 py-1.5 rounded-lg border border-[#1a1a1f] text-gray-500 text-[11px] hover:text-red-400 hover:border-red-500/30 transition-all"
+                      title="Remove all"
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+
+            {/* Wallet rows or empty state */}
+            {hasSaved ? (
+              <div className="divide-y divide-[#1a1a1f]/40">
+                {savedWallets.wallets.map(w => (
+                  <SavedWalletRow
+                    key={w.address}
+                    wallet={w}
+                    onAnalyze={analyzeWallet}
+                    onRemove={savedWallets.removeWallet}
+                    onUpdateName={savedWallets.updateName}
+                    onUpdateEmoji={savedWallets.updateEmoji}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="py-8 text-center">
+                <p className="text-gray-500 text-sm">Save wallets to track and analyze them</p>
+                <p className="text-gray-600 text-xs mt-1">Enter an address above and click + to save</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     );
