@@ -37,7 +37,7 @@
 | **Vanity Generator** | `/vanity` | Generate custom Solana wallet addresses with token-based access |
 | **Token Scanner** | `/scan` | Instant safety reports — risk scores, holder concentration, LP status, market data |
 | **Wallet X-Ray** | `/xray` | Full PnL breakdown, win rate, trader grade, and per-token analysis for any wallet |
-| ~~Hackathon Screener~~ | `/hackathon` | *Ended* — PumpFun "Build in Public" hackathon tracker (disabled, code preserved) |
+| ~~Hackathon Screener~~ | `/hackathon` | *Ended* — PumpFun "Build in Public" hackathon tracker (disabled) |
 
 More tools coming soon.
 
