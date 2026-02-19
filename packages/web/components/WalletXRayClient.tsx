@@ -1081,7 +1081,7 @@ export default function WalletXRayClient() {
     <div className="space-y-5 pb-6 stats-enter">
 
       {/* ── Top Bar ── */}
-      <div className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl px-5 sm:px-6 py-4 flex items-center justify-between hover:border-amber-500/20 hover:shadow-[0_0_20px_rgba(245,158,11,0.06)] transition-all duration-300">
+      <div className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl px-5 sm:px-6 py-4 flex items-center justify-between hover:border-solana-purple/20 hover:shadow-[0_0_20px_rgba(153,69,255,0.06)] transition-all duration-300">
         <div className="flex items-center gap-3">
           <button
             onClick={reset}
@@ -1136,7 +1136,7 @@ export default function WalletXRayClient() {
       {/* ── Hero Section: PnL Summary + Stats Grid ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Left: PnL Summary */}
-        <div className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl p-5 sm:p-6 flex flex-col justify-center hover:border-amber-500/20 hover:shadow-[0_0_20px_rgba(245,158,11,0.06)] transition-all duration-300">
+        <div className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl p-5 sm:p-6 flex flex-col justify-center hover:border-solana-purple/20 hover:shadow-[0_0_20px_rgba(153,69,255,0.06)] transition-all duration-300">
           <p className="text-gray-500 text-[10px] uppercase tracking-wider mb-1.5">Total PnL</p>
           <p className={`text-3xl sm:text-4xl font-bold ${pnlColor(result.totalPnl)} mb-1`}>
             {result.totalPnl >= 0 ? '+' : ''}{formatSolWithUnit(result.totalPnl)}
@@ -1188,7 +1188,7 @@ export default function WalletXRayClient() {
 
         {/* Right: Stats Grid 2x2 */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl p-5 hover:border-green-500/20 hover:shadow-[0_0_20px_rgba(34,197,94,0.06)] transition-all duration-300">
+          <div className={`bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl p-5 transition-all duration-300 ${result.realizedPnl > 0 ? 'hover:border-green-500/20 hover:shadow-[0_0_20px_rgba(34,197,94,0.06)]' : result.realizedPnl < 0 ? 'hover:border-red-500/20 hover:shadow-[0_0_20px_rgba(239,68,68,0.06)]' : 'hover:border-gray-500/20 hover:shadow-[0_0_20px_rgba(107,114,128,0.06)]'}`}>
             <div className="flex items-center gap-1.5 mb-2.5">
               <div className="w-2 h-2 rounded-full bg-green-500/50" />
               <p className="text-gray-500 text-[10px] uppercase tracking-wider">Realized PnL</p>
@@ -1203,7 +1203,7 @@ export default function WalletXRayClient() {
             ) : null}
           </div>
 
-          <div className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl p-5 hover:border-blue-500/20 hover:shadow-[0_0_20px_rgba(59,130,246,0.06)] transition-all duration-300">
+          <div className={`bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl p-5 transition-all duration-300 ${result.unrealizedPnl > 0 ? 'hover:border-green-500/20 hover:shadow-[0_0_20px_rgba(34,197,94,0.06)]' : result.unrealizedPnl < 0 ? 'hover:border-red-500/20 hover:shadow-[0_0_20px_rgba(239,68,68,0.06)]' : 'hover:border-gray-500/20 hover:shadow-[0_0_20px_rgba(107,114,128,0.06)]'}`}>
             <div className="flex items-center gap-1.5 mb-2.5">
               <div className="w-2 h-2 rounded-full bg-blue-500/50" />
               <p className="text-gray-500 text-[10px] uppercase tracking-wider">Unrealized PnL</p>

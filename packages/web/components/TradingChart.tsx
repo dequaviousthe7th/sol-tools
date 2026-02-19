@@ -169,6 +169,8 @@ export default function TradingChart({
           type: 'custom',
           formatter: fmt,
         },
+        lastValueVisible: true,
+        priceLineVisible: false,
       });
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
