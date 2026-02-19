@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-1.5.0-9945FF.svg" alt="Version 1.5.0"/>
+  <img src="https://img.shields.io/badge/Version-1.6.0-9945FF.svg" alt="Version 1.6.0"/>
   <img src="https://img.shields.io/badge/License-Proprietary-red.svg" alt="License: Proprietary"/>
   <img src="https://img.shields.io/badge/Fees-0%25-14F195.svg" alt="Zero Fees"/>
 </p>
@@ -35,7 +35,9 @@
 |------|-------|-------------|
 | **SOL Reclaimer** | `/reclaim` | Close empty token accounts and reclaim locked rent SOL |
 | **Vanity Generator** | `/vanity` | Generate custom Solana wallet addresses with token-based access |
-| **Hackathon Screener** | `/hackathon` | Track PumpFun "Build in Public" hackathon tokens with live market data |
+| **Token Scanner** | `/scan` | Instant safety reports — risk scores, holder concentration, LP status, market data |
+| **Wallet X-Ray** | `/xray` | Full PnL breakdown, win rate, trader grade, and per-token analysis for any wallet |
+| ~~Hackathon Screener~~ | `/hackathon` | *Ended* — PumpFun "Build in Public" hackathon tracker (disabled, code preserved) |
 
 More tools coming soon.
 
@@ -69,16 +71,19 @@ Visit **[soltools.net](https://soltools.net)** to browse all tools.
 4. Generate runs entirely in your browser via WASM
 5. Download your keypair in Solana CLI format
 
-### Hackathon Screener
+### Token Scanner
 
-<p align="center">
-  <img src="docs/preview-hackathon.png" alt="Hackathon Screener" width="800"/>
-</p>
+1. Go to [soltools.net/scan](https://soltools.net/scan)
+2. Enter any Solana token address
+3. Get an instant safety report with risk score, holder concentration, LP status, and market data
+4. View live chart with market cap overlay and DEX badge
 
-1. Go to [soltools.net/hackathon](https://soltools.net/hackathon)
-2. Browse hackathon tokens with live prices and market data
-3. Sort by market cap, volume, 24h change, or liquidity
-4. View DexScreener, pump.fun, and social links for each token
+### Wallet X-Ray
+
+1. Go to [soltools.net/xray](https://soltools.net/xray)
+2. Enter any wallet address (no connection needed)
+3. View trader grade (A+ to F), PnL breakdown, win rate, and per-token trade history
+4. Save wallets to track balances and quickly re-analyze them
 
 ---
 
@@ -136,7 +141,7 @@ The vanity generator creates Solana keypairs with custom prefixes or suffixes. A
 
 ## Architecture
 
-- **Web** — Next.js 14 static export with tools hub at `/`, individual tools at `/reclaim`, `/vanity`, `/hackathon`
+- **Web** — Next.js 14 static export with tools hub at `/`, individual tools at `/reclaim`, `/vanity`, `/scan`, `/xray`
 - **API Worker** — Edge-deployed worker with KV storage for vanity tokens, proxied RPC with method allowlist
 - **Core** — Shared TypeScript library for Solana account scanning and transaction building with ALT support
 - **WASM** — Rust-compiled vanity address generator running in Web Workers
@@ -158,6 +163,20 @@ The vanity generator creates Solana keypairs with custom prefixes or suffixes. A
 ---
 
 ## Changelog
+
+### v1.6.0
+
+**Token Scanner, Wallet X-Ray & UI Overhaul**
+- Token Scanner — instant safety reports with risk scores, holder analysis, LP status, and live chart
+- Wallet X-Ray — full PnL breakdown, trader grades, win rate, per-token history, and USD values
+- Saved wallets system with localStorage persistence, live balance fetching, import/export, and emoji labels
+- X-Ray idle screen redesign with dashboard mode (full-width tracked wallets table) and empty mode (centered hero)
+- Compact home page layout with smaller hero and tighter tool cards
+- Unified visual theme — all page icons and card accents use solana purple-green gradient
+- Hackathon screener disabled and hidden from navigation (code preserved for future events)
+- Sidebar expand button moved to bottom-left to avoid overlapping page content
+- Full-width layout for scanner and xray pages
+- Smart price formatter and right-click reset on charts
 
 ### v1.5.0
 
