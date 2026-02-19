@@ -117,6 +117,24 @@ function formatUsdDirect(usd: number): string {
   return `${sign}$${abs.toFixed(2)}`;
 }
 
+function formatValue(sol: number, usdDirect: number | undefined, solPrice: number, showUsd: boolean): string {
+  if (showUsd) {
+    if (usdDirect != null) return formatUsdDirect(usdDirect);
+    if (solPrice > 0) return formatUsdDirect(sol * solPrice);
+    return formatSol(sol) + ' SOL';
+  }
+  return formatSol(sol) + ' SOL';
+}
+
+function formatPnlValue(sol: number, usdDirect: number | undefined, solPrice: number, showUsd: boolean): string {
+  const sign = sol >= 0 ? '+' : '';
+  if (showUsd) {
+    if (usdDirect != null) return `${usdDirect >= 0 ? '+' : ''}${formatUsdDirect(usdDirect)}`;
+    if (solPrice > 0) return `${sign}${formatUsdDirect(sol * solPrice)}`;
+  }
+  return `${sign}${formatSol(sol)} SOL`;
+}
+
 function pnlColor(n: number): string {
   if (n > 0) return 'text-green-400';
   if (n < 0) return 'text-red-400';
@@ -512,6 +530,7 @@ export default function WalletXRayClient() {
   const [chartLoading, setChartLoading] = useState(false);
   const [solPrice, setSolPrice] = useState(0);
   const [copied, setCopied] = useState(false);
+  const [showUsd, setShowUsd] = useState(false);
 
   // Saved wallets
   const savedWallets = useSavedWallets();
@@ -1072,12 +1091,6 @@ export default function WalletXRayClient() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
           </button>
-          {(() => {
-            const saved = savedWallets.wallets.find(w => w.address === result.wallet);
-            return saved ? (
-              <span className="text-2xl flex-shrink-0" title={saved.name}>{saved.emoji}</span>
-            ) : null;
-          })()}
           <div>
             <p className="text-gray-500 text-[10px] uppercase tracking-wider">{savedWallets.wallets.find(w => w.address === result.wallet)?.name || 'Wallet'}</p>
             <div className="flex items-center gap-1.5">
@@ -1100,10 +1113,24 @@ export default function WalletXRayClient() {
           </div>
         </div>
 
-        {/* Grade badge */}
-        <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br ${gradeGradient(result.grade)} flex items-center justify-center flex-shrink-0 ${gradeGlow(result.grade)}`}>
-          <span className="text-2xl sm:text-3xl font-black text-white drop-shadow-lg">{result.grade}</span>
-        </div>
+        {/* Grade / Emoji badge */}
+        {(() => {
+          const saved = savedWallets.wallets.find(w => w.address === result.wallet);
+          return (
+            <div className="flex flex-col items-center gap-1 flex-shrink-0">
+              {saved ? (
+                <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br ${gradeGradient(result.grade)} flex items-center justify-center ${gradeGlow(result.grade)}`}>
+                  <span className="text-2xl sm:text-3xl drop-shadow-lg">{saved.emoji}</span>
+                </div>
+              ) : (
+                <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br ${gradeGradient(result.grade)} flex items-center justify-center ${gradeGlow(result.grade)}`}>
+                  <span className="text-2xl sm:text-3xl font-black text-white drop-shadow-lg">{result.grade}</span>
+                </div>
+              )}
+              <span className="text-[9px] text-gray-500 font-medium">Grade {result.grade}</span>
+            </div>
+          );
+        })()}
       </div>
 
       {/* ── Hero Section: PnL Summary + Stats Grid ── */}
@@ -1211,11 +1238,17 @@ export default function WalletXRayClient() {
       {(chartLoading || chartData.length > 0) && (
         <TradingChart
           type="area"
-          data={chartData}
+          data={showUsd && solPrice > 0 ? chartData.map(d => ({ time: d.time, value: d.value * solPrice })) : chartData}
           height={280}
           mobileHeight={200}
           color={result.totalPnl >= 0 ? 'green' : 'red'}
           loading={chartLoading}
+          priceFormatter={showUsd ? undefined : (n: number) => {
+            const abs = Math.abs(n);
+            if (abs >= 1_000_000) return `${(n / 1_000_000).toFixed(2)}M SOL`;
+            if (abs >= 1_000) return `${(n / 1_000).toFixed(2)}K SOL`;
+            return `${n.toFixed(2)} SOL`;
+          }}
           ranges={[
             { label: '7D', seconds: 604800 },
             { label: '30D', seconds: 2592000 },
@@ -1225,20 +1258,34 @@ export default function WalletXRayClient() {
       )}
 
       {/* ── Tab Navigation ── */}
-      <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
-        {tabs.map(tab => (
+      <div className="flex items-center gap-2">
+        <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none flex-1">
+          {tabs.map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`px-4 py-2.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
+                activeTab === tab.key
+                  ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-[0_0_15px_rgba(245,158,11,0.2)]'
+                  : 'bg-[#0d0d0f] border border-[#1a1a1f] text-gray-400 hover:text-white hover:border-[#333]'
+              }`}
+            >
+              {tab.label} ({tab.count})
+            </button>
+          ))}
+        </div>
+        {solPrice > 0 && (
           <button
-            key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
-            className={`px-4 py-2.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
-              activeTab === tab.key
-                ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-[0_0_15px_rgba(245,158,11,0.2)]'
-                : 'bg-[#0d0d0f] border border-[#1a1a1f] text-gray-400 hover:text-white hover:border-[#333]'
-            }`}
+            onClick={() => setShowUsd(prev => !prev)}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-[#0d0d0f] border border-[#1a1a1f] text-xs font-medium text-gray-400 hover:text-white hover:border-[#333] transition-all flex-shrink-0"
+            title={showUsd ? 'Switch to SOL' : 'Switch to USD'}
           >
-            {tab.label} ({tab.count})
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+            <span className="font-semibold">{showUsd ? 'USD' : 'SOL'}</span>
           </button>
-        ))}
+        )}
       </div>
 
       {/* ── Tab Content ── */}
@@ -1270,11 +1317,11 @@ export default function WalletXRayClient() {
                           <TokenCell token={token} />
                         </td>
                         <td className="px-3 lg:px-4 py-3 text-right">
-                          <span className="text-gray-300 text-xs">{formatSol(token.invested)} SOL</span>
+                          <span className="text-gray-300 text-xs">{formatValue(token.invested, token.investedUsd, solPrice, showUsd)}</span>
                         </td>
                         <td className="px-3 lg:px-4 py-3 text-right">
                           <span className={`text-xs font-medium ${pnlColor(token.pnl)}`}>
-                            {formatPnl(token.pnl)}
+                            {formatPnlValue(token.pnl, token.pnlUsd, solPrice, showUsd)}
                           </span>
                         </td>
                         <td className="px-3 lg:px-4 py-3 text-right">
@@ -1297,7 +1344,7 @@ export default function WalletXRayClient() {
                         </td>
                         <td className="px-3 lg:px-4 py-3 text-right">
                           <span className="text-gray-400 text-xs">
-                            {token.currentValue > 0 ? `${formatSol(token.currentValue)} SOL` : '\u2014'}
+                            {token.currentValue > 0 ? formatValue(token.currentValue, undefined, solPrice, showUsd) : '\u2014'}
                           </span>
                         </td>
                       </tr>
@@ -1337,14 +1384,14 @@ export default function WalletXRayClient() {
                           <TokenCell token={token} />
                         </td>
                         <td className="px-3 lg:px-4 py-3 text-right">
-                          <span className="text-gray-300 text-xs">{formatSol(token.invested)} SOL</span>
+                          <span className="text-gray-300 text-xs">{formatValue(token.invested, token.investedUsd, solPrice, showUsd)}</span>
                         </td>
                         <td className="px-3 lg:px-4 py-3 text-right">
-                          <span className="text-white text-xs font-medium">{formatSol(token.currentValue)} SOL</span>
+                          <span className="text-white text-xs font-medium">{formatValue(token.currentValue, undefined, solPrice, showUsd)}</span>
                         </td>
                         <td className="px-3 lg:px-4 py-3 text-right">
                           <span className={`text-xs font-medium ${pnlColor(token.unrealized)}`}>
-                            {token.unrealized >= 0 ? '+' : ''}{formatSol(token.unrealized)} SOL
+                            {formatPnlValue(token.unrealized, undefined, solPrice, showUsd)}
                           </span>
                         </td>
                         <td className="px-3 lg:px-4 py-3 text-right">
@@ -1402,14 +1449,14 @@ export default function WalletXRayClient() {
                           <TokenCell token={token} />
                         </td>
                         <td className="px-3 lg:px-4 py-3 text-right">
-                          <span className="text-gray-300 text-xs">{formatSol(token.invested)} SOL</span>
+                          <span className="text-gray-300 text-xs">{formatValue(token.invested, token.investedUsd, solPrice, showUsd)}</span>
                         </td>
                         <td className="px-3 lg:px-4 py-3 text-right">
-                          <span className="text-gray-300 text-xs">{formatSol(token.totalSold)} SOL</span>
+                          <span className="text-gray-300 text-xs">{formatValue(token.totalSold, undefined, solPrice, showUsd)}</span>
                         </td>
                         <td className="px-3 lg:px-4 py-3 text-right">
                           <span className={`text-xs font-medium ${pnlColor(token.realized)}`}>
-                            {token.realized >= 0 ? '+' : ''}{formatSol(token.realized)} SOL
+                            {formatPnlValue(token.realized, token.realizedUsd, solPrice, showUsd)}
                           </span>
                         </td>
                         <td className="px-3 lg:px-4 py-3 text-right">
@@ -1477,7 +1524,7 @@ export default function WalletXRayClient() {
                         </td>
                         <td className="px-3 lg:px-4 py-3 text-right">
                           <span className={`text-xs font-medium ${pnlColor(token.pnl)}`}>
-                            {formatPnl(token.pnl)}
+                            {formatPnlValue(token.pnl, token.pnlUsd, solPrice, showUsd)}
                           </span>
                         </td>
                         <td className="px-3 lg:px-4 py-3 text-right">
@@ -1542,7 +1589,7 @@ export default function WalletXRayClient() {
                         </td>
                         <td className="px-3 lg:px-4 py-3 text-right">
                           <span className={`text-xs font-medium ${t.type === 'in' ? 'text-green-400' : 'text-red-400'}`}>
-                            {t.type === 'in' ? '+' : '-'}{formatSol(t.amount)} SOL
+                            {t.type === 'in' ? '+' : '-'}{showUsd && solPrice > 0 ? formatUsdDirect(t.amount * solPrice) : `${formatSol(t.amount)} SOL`}
                           </span>
                         </td>
                         <td className="px-3 lg:px-4 py-3">

@@ -565,6 +565,7 @@ export default function TokenScannerClient() {
 
           {/* Risk score */}
           <div className="flex flex-col items-center gap-1 flex-shrink-0">
+            <span className="text-[9px] text-gray-500 font-medium tracking-wider uppercase">RugCheck</span>
             {result.riskScore !== null ? (
               <>
                 <div className={`px-4 py-2 rounded-xl text-xl font-bold tabular-nums ${riskScoreColor(result.riskScore)}`}>
