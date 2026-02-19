@@ -61,6 +61,18 @@ export const Sidebar = ({ activePath, isOpen, onToggle }: SidebarProps) => {
       <nav className="flex-1 flex flex-col items-center pt-4 gap-1">
         {TOOLS.map(tool => {
           const isActive = activePath === tool.href;
+          if (tool.id === 'hackathon') {
+            return (
+              <div
+                key={tool.id}
+                className="w-full flex flex-col items-center justify-center py-3 px-1 text-gray-700 cursor-not-allowed opacity-40 grayscale"
+                title="Hackathon ended"
+              >
+                <ToolIcon id={tool.id} />
+                <span className="text-[10px] mt-1 font-medium">{tool.label}</span>
+              </div>
+            );
+          }
           return (
             <Link
               key={tool.id}
@@ -79,9 +91,6 @@ export const Sidebar = ({ activePath, isOpen, onToggle }: SidebarProps) => {
               )}
               <ToolIcon id={tool.id} />
               <span className="text-[10px] mt-1 font-medium">{tool.label}</span>
-              {tool.id === 'hackathon' && (
-                <span className="text-[7px] font-bold text-solana-purple leading-none mt-0.5">LIMITED</span>
-              )}
             </Link>
           );
         })}
