@@ -498,7 +498,7 @@ export default function TokenScannerClient() {
     <div className="space-y-5 pb-6 stats-enter">
 
       {/* ===== TOKEN HEADER (two-column on desktop) ===== */}
-      <div className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl overflow-hidden">
+      <div className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl overflow-hidden hover:border-cyan-500/20 hover:shadow-[0_0_20px_rgba(6,182,212,0.06)] transition-all duration-300">
         <div className={`h-1 bg-gradient-to-r ${riskGradientBar(result.riskScore)}`} />
 
         <div className="p-5 sm:p-6 flex items-center gap-4">
@@ -623,7 +623,7 @@ export default function TokenScannerClient() {
           { label: 'LP Locked', value: result.lpLockedPct !== null ? `${result.lpLockedPct.toFixed(1)}%` : '\u2014', icon: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z' },
           { label: 'Token Age', value: result.tokenAge || '\u2014', icon: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z' },
         ].map((stat) => (
-          <div key={stat.label} className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl p-4 group hover:border-cyan-500/20 transition-colors">
+          <div key={stat.label} className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl p-4 group hover:border-cyan-500/20 hover:shadow-[0_0_20px_rgba(6,182,212,0.06)] transition-all duration-300">
             <div className="flex items-center gap-1.5 mb-2">
               <svg className="w-3 h-3 text-gray-600 group-hover:text-cyan-400/60 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={stat.icon} />
@@ -639,7 +639,7 @@ export default function TokenScannerClient() {
       {/* ===== SECURITY AUDIT + RISK FACTORS (side by side) ===== */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Security Audit */}
-        <div className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl p-5 sm:p-6">
+        <div className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl p-5 sm:p-6 hover:border-cyan-500/20 hover:shadow-[0_0_20px_rgba(6,182,212,0.06)] transition-all duration-300">
           <div className="flex items-center gap-2 mb-4">
             <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -721,7 +721,7 @@ export default function TokenScannerClient() {
         </div>
 
         {/* Risk Factors */}
-        <div className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl p-5 sm:p-6">
+        <div className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl p-5 sm:p-6 hover:border-yellow-500/20 hover:shadow-[0_0_20px_rgba(234,179,8,0.06)] transition-all duration-300">
           <div className="flex items-center gap-2 mb-4">
             <svg className="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
@@ -767,7 +767,7 @@ export default function TokenScannerClient() {
 
       {/* ===== TOP TRADERS ===== */}
       {(tradersLoading || topTraders.length > 0) && (
-        <div className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl overflow-hidden">
+        <div className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-2xl overflow-hidden hover:border-cyan-500/20 hover:shadow-[0_0_20px_rgba(6,182,212,0.06)] transition-all duration-300">
           <div className="px-5 sm:px-6 py-4 border-b border-[#1a1a1f] flex items-center gap-2">
             <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
