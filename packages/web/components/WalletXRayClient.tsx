@@ -54,6 +54,7 @@ interface WalletXRayResult {
   tokens: WalletXRayToken[];
   transfers: WalletTransfer[];
   pnlHistory?: Array<{ time: number; value: number }>;
+  pnlHistoryUsd?: Array<{ time: number; value: number }>;
 }
 
 type State = 'idle' | 'loading' | 'results' | 'error';
@@ -527,6 +528,7 @@ export default function WalletXRayClient() {
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState<Tab>('top');
   const [chartData, setChartData] = useState<{time:number;value:number}[]>([]);
+  const [chartDataUsd, setChartDataUsd] = useState<{time:number;value:number}[]>([]);
   const [chartLoading, setChartLoading] = useState(false);
   const [solPrice, setSolPrice] = useState(0);
   const [copied, setCopied] = useState(false);
@@ -580,22 +582,25 @@ export default function WalletXRayClient() {
     setState('loading');
     setError('');
     setChartData([]);
+    setChartDataUsd([]);
     setChartLoading(true);
 
     try {
       const workerUrl = process.env.NEXT_PUBLIC_WORKER_URL;
       if (!workerUrl) throw new Error('API not configured');
 
-      const res = await fetch(`${workerUrl}/api/wallet-xray?wallet=${wallet}&nocache=1`);
+      const res = await fetch(`${workerUrl}/api/wallet-xray?wallet=${wallet}&nocache=1&t=${Date.now()}`, { cache: 'no-store' });
       if (!res.ok) {
         const data = await res.json().catch(() => ({ error: 'Request failed' }));
         throw new Error((data as { error?: string }).error || `Error ${res.status}`);
       }
 
       const data = await res.json() as WalletXRayResult;
-      // Build PnL chart from our own computed data
       if (data.pnlHistory && data.pnlHistory.length > 0) {
         setChartData(data.pnlHistory);
+      }
+      if (data.pnlHistoryUsd && data.pnlHistoryUsd.length > 0) {
+        setChartDataUsd(data.pnlHistoryUsd);
       }
       setChartLoading(false);
       setResult(data);
@@ -1249,7 +1254,7 @@ export default function WalletXRayClient() {
             key={showUsd ? 'usd' : 'sol'}
             type="baseline"
             hideGrid
-            data={showUsd && solPrice > 0 ? chartData.map(d => ({ time: d.time, value: Math.round(d.value * solPrice * 100) / 100 })) : chartData}
+            data={showUsd && chartDataUsd.length > 0 ? chartDataUsd : chartData}
             height={280}
             mobileHeight={200}
             loading={chartLoading}
