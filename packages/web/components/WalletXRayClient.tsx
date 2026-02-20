@@ -589,7 +589,7 @@ export default function WalletXRayClient() {
       const workerUrl = process.env.NEXT_PUBLIC_WORKER_URL;
       if (!workerUrl) throw new Error('API not configured');
 
-      const res = await fetch(`${workerUrl}/api/wallet-xray?wallet=${wallet}&nocache=1&t=${Date.now()}`, { cache: 'no-store' });
+      const res = await fetch(`${workerUrl}/api/wallet-xray?wallet=${wallet}`);
       if (!res.ok) {
         const data = await res.json().catch(() => ({ error: 'Request failed' }));
         throw new Error((data as { error?: string }).error || `Error ${res.status}`);
