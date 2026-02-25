@@ -12,6 +12,7 @@ const MOBILE_TOOLS = [
   { id: 'hackathon', label: 'Hackathon', href: '/hackathon', description: 'Hackathon screener' },
   { id: 'scan', label: 'Scanner', href: '/scan', description: 'Token safety scanner' },
   { id: 'xray', label: 'X-Ray', href: '/xray', description: 'Wallet PnL analysis' },
+  { id: 'burn', label: 'Burn or Lock', href: '/burn', description: 'Burn or lock tokens' },
   { id: 'stats', label: 'My Stats', href: '/stats', description: 'Your activity & achievements' },
 ] as const;
 
@@ -45,7 +46,7 @@ export const MobileToolDropdown = () => {
 
       {open && (
         <div className="absolute top-full left-0 mt-1 w-48 rounded-xl bg-[#111113] border border-[#222228] shadow-xl z-50 py-1 overflow-hidden">
-          {MOBILE_TOOLS.filter(t => t.id !== 'hackathon').map(tool => {
+          {MOBILE_TOOLS.map(tool => {
             const isActive = pathname === tool.href;
             return (
               <Link
