@@ -1145,6 +1145,14 @@ export default function WalletXRayClient() {
         })()}
       </div>
 
+      {/* Beta notice */}
+      <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-yellow-500/5 border border-yellow-500/15 text-yellow-500/80 text-[11px]">
+        <svg className="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01M12 2l10 18H2L12 2z" />
+        </svg>
+        <span>X-Ray is actively being improved — some data may be slightly off.</span>
+      </div>
+
       {/* ── Hero Section: PnL Summary + Stats Grid ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Left: PnL Summary */}
