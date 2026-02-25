@@ -16,10 +16,10 @@ export const TOOLS = [
     description: 'Generate vanity Solana wallet addresses',
   },
   {
-    id: 'hackathon',
-    label: 'Hackathon',
-    href: '/hackathon',
-    description: 'PumpFun Build in Public hackathon screener',
+    id: 'burn',
+    label: 'Burn',
+    href: '/burn',
+    description: 'Burn or lock tokens',
   },
   {
     id: 'scan',
@@ -34,10 +34,10 @@ export const TOOLS = [
     description: 'Wallet PnL and trading analysis',
   },
   {
-    id: 'burn',
-    label: 'Burn',
-    href: '/burn',
-    description: 'Burn or lock tokens',
+    id: 'hackathon',
+    label: 'Hackathon',
+    href: '/hackathon',
+    description: 'PumpFun Build in Public hackathon screener',
   },
 ] as const;
 
