@@ -2298,9 +2298,9 @@ const walletXRayCache = new Map<string, { data: WalletXRayResult; fetchedAt: num
 const WALLET_XRAY_CACHE_MS = 300_000;
 const WALLET_XRAY_CACHE_MAX = 200;
 
-// KV cache key prefix and TTL (20 min)
+// KV cache key prefix and TTL (1 hour — historical data rarely changes)
 const WALLET_XRAY_KV_PREFIX = 'xray:';
-const WALLET_XRAY_KV_TTL = 1200;
+const WALLET_XRAY_KV_TTL = 3600;
 
 function calculateGrade(winRate: number, totalPnl: number): string {
   if (winRate >= 70 && totalPnl > 0) return 'A+';
@@ -2404,7 +2404,7 @@ async function fetchAllSignatures(wallet: string, env: Env): Promise<{ sigs: str
   let maxTime = 0;
   const heliusRpc = `https://mainnet.helius-rpc.com/?api-key=${env.HELIUS_API_KEY}`;
 
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 3; i++) {
     const params: unknown[] = [wallet, { limit: 1000, ...(before ? { before } : {}) }];
     const res = await fetch(heliusRpc, {
       method: 'POST',
@@ -2496,7 +2496,13 @@ function buildTokenLedgers(
   const pnlPoints: Array<{ time: number; value: number }> = [];
   const pnlPointsUsd: Array<{ time: number; value: number }> = [];
 
-  for (const tx of sorted) {
+  // Downsample chart to ~200 points max for performance (O(trades × ledgers) per point)
+  const swapCount = sorted.length;
+  const chartStep = Math.max(1, Math.floor(swapCount / 200));
+  let tradeIdx = 0;
+
+  for (let txIdx = 0; txIdx < swapCount; txIdx++) {
+    const tx = sorted[txIdx];
     const ts = tx.timestamp || 0;
     const tokenTransfers = tx.tokenTransfers || [];
 
@@ -2617,7 +2623,10 @@ function buildTokenLedgers(
 
     // Record PnL chart point after each trade using the SAME ledger state
     // that produces the hero's realizedPnl / realizedPnlUsd.
-    if (ts > 0) {
+    // Downsample: only compute every Nth trade to cap chart at ~200 points,
+    // plus always compute on the last trade for accuracy.
+    tradeIdx++;
+    if (ts > 0 && (tradeIdx % chartStep === 0 || txIdx === swapCount - 1)) {
       let runningRealized = 0;
       let runningRealizedUsd = 0;
       for (const [, l] of ledgers) {

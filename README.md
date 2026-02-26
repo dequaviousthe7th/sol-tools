@@ -38,6 +38,7 @@
 | **Vanity Generator** | `/vanity` | Generate custom Solana wallet addresses with token-based access |
 | **Token Scanner** | `/scan` | Instant safety reports — risk scores, holder concentration, LP status, market data |
 | **Wallet X-Ray** | `/xray` | Full PnL breakdown, win rate, trader grade, and per-token analysis for any wallet |
+| **Hackathon Screener** | `/hackathon` | PumpFun "Build in Public" hackathon tracker with live market data |
 
 More tools coming soon — [request a feature](https://soltools.net) on the home page.
 
@@ -105,6 +106,13 @@ Visit **[soltools.net](https://soltools.net)** to browse all tools.
   <img src="docs/preview-xray-tracked.png" alt="Wallet X-Ray — Tracked Wallets" width="800"/>
 </p>
 
+### Hackathon Screener
+
+1. Go to [soltools.net/hackathon](https://soltools.net/hackathon)
+2. Browse PumpFun "Build in Public" hackathon tokens with live market data
+3. Sort by market cap, volume, price change, and more
+4. Search and filter tokens
+
 ---
 
 ## How the Reclaimer Works
@@ -160,7 +168,7 @@ The vanity generator creates Solana keypairs with custom prefixes or suffixes. A
 
 ## Architecture
 
-- **Web** — Next.js 14 static export with tools hub at `/`, individual tools at `/reclaim`, `/burn-lock`, `/vanity`, `/scan`, `/xray`
+- **Web** — Next.js 14 static export with tools hub at `/`, individual tools at `/reclaim`, `/burn-lock`, `/vanity`, `/scan`, `/xray`, `/hackathon`
 - **API Worker** — Edge-deployed worker for proxied RPC and backend services
 - **Core** — Shared TypeScript library for Solana account scanning and transaction building
 - **WASM** — Rust-compiled vanity address generator running in Web Workers
@@ -206,7 +214,6 @@ The vanity generator creates Solana keypairs with custom prefixes or suffixes. A
 - Saved wallets with import/export and live balance tracking
 - Redesigned X-Ray idle screen with dashboard and empty modes
 - Compact home page layout with unified visual theme
-- Hackathon screener disabled (code preserved for future events)
 - Various UI and layout improvements
 
 ### v1.5.0
