@@ -18,12 +18,14 @@
     "@solana/wallet-adapter-react-ui": "^0.9.35",
     "@solana/web3.js": "^1.91.0",
     "@solreclaimer/core": "workspace:*",
+    "@streamflow/stream": "^11.1.0",
     "lightweight-charts": "^5.1.0",
     "next": "14.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@types/bn.js": "^5.2.0",
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
