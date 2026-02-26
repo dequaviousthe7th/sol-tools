@@ -86,7 +86,10 @@ coverage/
 *.tsbuildinfo
 
 # Private packages (deployed separately)
-packages/worker/
+packages/worker/.dev.vars
+packages/worker/.wrangler/
+packages/worker/node_modules/
+packages/worker/package-lock.json
 packages/cli/
 
 # Admin panel
