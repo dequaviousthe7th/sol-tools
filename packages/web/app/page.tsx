@@ -140,7 +140,7 @@ const features = [
 
 export default function HubPage() {
   return (
-    <main className="flex-1 flex flex-col pb-6 relative">
+    <main className="flex-1 flex flex-col pb-6 relative overflow-hidden">
 
       {/* My Stats pill — top right, only when wallet connected */}
       <div className="hidden sm:block absolute top-4 right-4 z-10">
