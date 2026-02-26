@@ -3,6 +3,8 @@ import dynamic from 'next/dynamic';
 
 const WalletStatsHub = dynamic(() => import('../components/WalletStatsHub'), { ssr: false });
 const HomePromoPanel = dynamic(() => import('../components/HomePromoPanel').then(m => ({ default: m.HomePromoPanel })), { ssr: false });
+const FeatureRequestTrigger = dynamic(() => import('../components/FeatureRequestTrigger').then(m => ({ default: m.FeatureRequestTrigger })), { ssr: false });
+const ActiveUsersPill = dynamic(() => import('../components/Heartbeat').then(m => ({ default: m.ActiveUsersCount })), { ssr: false });
 
 const tools = [
   {
@@ -48,10 +50,10 @@ const tools = [
   {
     id: 'burn',
     title: 'Burn or Lock',
-    badge: 'LIVE',
+    badge: 'MAINNET',
     badgeClass: 'bg-solana-green/20 text-solana-green border-solana-green/30',
     description: 'Burn or permanently lock tokens on Solana. Build trust with your community — verifiable on-chain.',
-    href: '/burn',
+    href: '/burn-lock',
     accentFrom: 'from-orange-500',
     accentTo: 'to-blue-500',
     iconBg: 'from-orange-500/10 to-blue-500/10',
@@ -170,6 +172,11 @@ export default function HubPage() {
             </div>
           ))}
         </div>
+
+        {/* Live active users indicator */}
+        <div className="flex justify-center mt-2.5 text-[11px] text-gray-500">
+          <ActiveUsersPill />
+        </div>
       </section>
 
       {/* Tools grid */}
@@ -214,21 +221,8 @@ export default function HubPage() {
       {/* Floating side promo panels (desktop) */}
       <HomePromoPanel />
 
-      {/* Coming soon teaser */}
-      <section className="px-4 max-w-[51rem] mx-auto w-full mt-3">
-        <div className="relative rounded-xl border border-dashed border-[#222228] px-3.5 py-[20px] flex items-center gap-3 overflow-hidden">
-          <div className="shimmer absolute inset-0 pointer-events-none" />
-          <div className="w-[38px] h-[38px] rounded-lg bg-[#111113] flex items-center justify-center border border-[#222228] text-gray-600 flex-shrink-0">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-          </div>
-          <div>
-            <p className="text-gray-500 text-[11px] font-medium">More tools coming soon</p>
-            <p className="text-gray-600 text-[10px] mt-0.5">Exit strategy calculator, dev toolkit, and more in the works.</p>
-          </div>
-        </div>
-      </section>
+      {/* Coming soon teaser + feature request trigger */}
+      <FeatureRequestTrigger />
 
     </main>
   );
