@@ -13,7 +13,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-1.6.0-9945FF.svg" alt="Version 1.6.0"/>
+  <img src="https://img.shields.io/badge/Version-1.7.0-9945FF.svg" alt="Version 1.7.0"/>
   <img src="https://img.shields.io/badge/License-Proprietary-red.svg" alt="License: Proprietary"/>
   <img src="https://img.shields.io/badge/Fees-0%25-14F195.svg" alt="Zero Fees"/>
 </p>
@@ -34,12 +34,12 @@
 | Tool | Route | Description |
 |------|-------|-------------|
 | **SOL Reclaimer** | `/reclaim` | Close empty token accounts and reclaim locked rent SOL |
+| **Burn & Lock** | `/burn-lock` | Burn tokens permanently or lock them via Streamflow vesting contracts |
 | **Vanity Generator** | `/vanity` | Generate custom Solana wallet addresses with token-based access |
 | **Token Scanner** | `/scan` | Instant safety reports — risk scores, holder concentration, LP status, market data |
 | **Wallet X-Ray** | `/xray` | Full PnL breakdown, win rate, trader grade, and per-token analysis for any wallet |
-| ~~Hackathon Screener~~ | `/hackathon` | *Ended* — PumpFun "Build in Public" hackathon tracker (disabled) |
 
-More tools coming soon.
+More tools coming soon — [request a feature](https://soltools.net) on the home page.
 
 ---
 
@@ -81,6 +81,14 @@ Visit **[soltools.net](https://soltools.net)** to browse all tools.
 2. Enter any Solana token address
 3. Get an instant safety report with risk score, holder concentration, LP status, and market data
 4. View live chart with market cap overlay
+
+### Burn & Lock
+
+1. Go to [soltools.net/burn-lock](https://soltools.net/burn-lock)
+2. Connect your Solana wallet
+3. **Burn** — permanently destroy tokens by sending them to a burn address
+4. **Lock** — create a Streamflow vesting contract to lock tokens for a set duration
+5. Share your burn/lock on X with one click
 
 ### Wallet X-Ray
 
@@ -152,7 +160,7 @@ The vanity generator creates Solana keypairs with custom prefixes or suffixes. A
 
 ## Architecture
 
-- **Web** — Next.js 14 static export with tools hub at `/`, individual tools at `/reclaim`, `/vanity`, `/scan`, `/xray`
+- **Web** — Next.js 14 static export with tools hub at `/`, individual tools at `/reclaim`, `/burn-lock`, `/vanity`, `/scan`, `/xray`
 - **API Worker** — Edge-deployed worker for proxied RPC and backend services
 - **Core** — Shared TypeScript library for Solana account scanning and transaction building
 - **WASM** — Rust-compiled vanity address generator running in Web Workers
@@ -173,6 +181,22 @@ The vanity generator creates Solana keypairs with custom prefixes or suffixes. A
 ---
 
 ## Changelog
+
+### v1.7.0
+
+**Burn & Lock, SOLT Token Page, Feature Requests & Performance**
+- New tool: Burn & Lock — burn tokens permanently or lock via Streamflow vesting contracts
+- Burn transactions use VersionedTransaction (no more wallet simulation warnings)
+- SOLT token page with live chart, top traders, and market data
+- SolToolsBot Discord bot promo page
+- Feature request form on the home page (submit ideas directly)
+- Live active users counter with animated display on the hub
+- Share burn/lock results on X with social tracking
+- Client-side caching for X-Ray results (faster repeat lookups)
+- Improved X-Ray backend caching and Cloudflare edge caching
+- Rate limiting on stats and vanity endpoints
+- Hub page redesign with promo panels and unique card gradients
+- Various UI, mobile, and layout improvements
 
 ### v1.6.0
 
