@@ -18,7 +18,7 @@ export const TOOLS = [
   {
     id: 'burn',
     label: 'Burn',
-    href: '/burn',
+    href: '/burn-lock',
     description: 'Burn or lock tokens',
   },
   {
