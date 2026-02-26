@@ -88,6 +88,7 @@ const ALLOWED_METHODS = new Set([
   'isBlockhashValid',
   'getRecentPrioritizationFees',
   'getAddressLookupTable',
+  'getAssetBatch',
 ]);
 
 // In-memory rate limiting (per-isolate, resets on cold start)

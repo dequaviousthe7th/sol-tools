@@ -427,7 +427,8 @@ export const TokenBurnLock = () => {
   /* ── Metadata fetch ────────────────────────────── */
   const fetchMetadata = useCallback(async (mints: string[]) => {
     if (mints.length === 0) return;
-    const rpcUrl = process.env.NEXT_PUBLIC_RPC_URL;
+    const workerUrl = process.env.NEXT_PUBLIC_WORKER_URL;
+    const rpcUrl = workerUrl ? `${workerUrl}/api/rpc` : process.env.NEXT_PUBLIC_RPC_URL;
     if (!rpcUrl) return;
     try {
       const res = await fetch(rpcUrl, {
