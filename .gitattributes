@@ -1,0 +1,12 @@
+# Binary files
+*.wasm binary
+*.png binary
+*.ico binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+
+# Auto-generated files
+packages/web/public/wasm/vanity_wasm.js linguist-generated=true
+packages/web/public/wasm/vanity_wasm_bg.wasm linguist-generated=true

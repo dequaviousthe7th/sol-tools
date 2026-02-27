@@ -220,7 +220,7 @@ export default function PumpTokenPage() {
                   </svg>
                 </div>
                 <h3 className="text-white font-semibold text-[13px] mb-1.5">Free forever</h3>
-                <p className="text-gray-500 text-[11.5px] leading-relaxed">SolTools is free and open source — always. $SOLT funds development while giving back to the community.</p>
+                <p className="text-gray-500 text-[11.5px] leading-relaxed">SolTools is free and verifiable — always. $SOLT funds development while giving back to the community.</p>
               </div>
               <div className="bg-[#0d0d0f] border border-[#1a1a1f] rounded-xl p-5 hover:border-solana-purple/20 transition-all duration-300">
                 <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-solana-purple/10 to-solana-green/10 flex items-center justify-center text-solana-green mb-3">

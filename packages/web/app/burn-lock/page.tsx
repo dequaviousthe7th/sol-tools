@@ -8,7 +8,7 @@ const TokenBurnLock = dynamic(() => import('@/components/TokenBurnLock').then(m 
 
 export const metadata: Metadata = {
   title: 'Burn or Lock - SolTools',
-  description: 'Burn or permanently lock tokens on Solana. Build trust with your community. Zero fees, open source.',
+  description: 'Burn or permanently lock tokens on Solana. Build trust with your community. Zero fees, fully verifiable.',
 };
 
 export default function BurnPage() {

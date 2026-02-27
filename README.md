@@ -9,7 +9,7 @@
 <h1 align="center">SolTools</h1>
 
 <p align="center">
-  <b>Free, open-source Solana tools. No fees, no tracking, no compromise.</b>
+  <b>Free, verifiable Solana tools. No fees, no tracking, no compromise.</b>
 </p>
 
 <p align="center">

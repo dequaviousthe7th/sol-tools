@@ -1,7 +1,7 @@
 {
   "name": "SolTools",
   "short_name": "SolTools",
-  "description": "Free, open-source Solana tools. Reclaim rent, generate vanity wallets, and more.",
+  "description": "Free, verifiable Solana tools. Reclaim rent, generate vanity wallets, and more.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0b",

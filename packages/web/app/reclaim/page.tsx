@@ -9,7 +9,7 @@ const WalletStatsHub = dynamic(() => import('@/components/WalletStatsHub'), { ss
 
 export const metadata: Metadata = {
   title: 'Reclaim SOL - SolTools',
-  description: 'Reclaim locked SOL from empty token accounts. Zero fees, open source.',
+  description: 'Reclaim locked SOL from empty token accounts. Zero fees, fully verifiable.',
 };
 
 export default function ReclaimPage() {

@@ -134,7 +134,7 @@ const tools = [
 
 const features = [
   { label: 'Zero Fees', icon: '0' },
-  { label: 'Open Source', icon: '{}' },
+  { label: 'Verifiable', icon: '{}' },
   { label: 'No Tracking', icon: '~' },
 ];
 
@@ -160,7 +160,7 @@ export default function HubPage() {
         </div>
         <h1 className="text-[1.9rem] sm:text-[2.4rem] font-bold gradient-text mb-1.5">SolTools</h1>
         <p className="text-gray-400 text-[13.5px] sm:text-[15px] max-w-md mx-auto mb-4">
-          Free, open-source Solana tools. No fees, no tracking, no compromise.
+          Free, verifiable Solana tools. No fees, no tracking, no compromise.
         </p>
 
         {/* Feature pills */}

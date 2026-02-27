@@ -93,7 +93,7 @@ export const InfoModal: FC<InfoModalProps> = ({ open, onClose }) => {
               <h3 className="font-semibold text-white">Is it Safe?</h3>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed">
-              Yes. SolReclaimer is fully open-source, non-custodial, and never requests your private keys. It only closes accounts with a zero token balance — your funds are never at risk. All transactions are signed locally in your wallet and verified on-chain.
+              Yes. SolReclaimer is fully verifiable, non-custodial, and never requests your private keys. It only closes accounts with a zero token balance — your funds are never at risk. All transactions are signed locally in your wallet and verified on-chain.
             </p>
           </section>
         </div>
