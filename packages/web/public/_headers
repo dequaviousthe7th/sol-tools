@@ -1,3 +1,12 @@
+# Security headers on all routes
+/*
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  X-XSS-Protection: 1; mode=block
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
 # HTML pages: never cache, always fetch fresh from origin
 /*.html
   Cache-Control: no-cache, no-store, must-revalidate
@@ -17,9 +26,42 @@
 /hackathon
   Cache-Control: no-cache, no-store, must-revalidate
 
+/xray
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/scan
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/burn-lock
+  Cache-Control: no-cache, no-store, must-revalidate
+
+/pumptoken
+  Cache-Control: no-cache, no-store, must-revalidate
+
 /d/*
   Cache-Control: no-cache, no-store, must-revalidate
+
+# SEO files: short cache, allow re-crawl
+/robots.txt
+  Cache-Control: public, max-age=86400
+
+/sitemap.xml
+  Cache-Control: public, max-age=86400
+  Content-Type: application/xml
 
 # Hashed static assets: cache forever (filenames change on each build)
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
+
+# PWA assets
+/manifest.json
+  Cache-Control: public, max-age=86400
+
+/icon-*.png
+  Cache-Control: public, max-age=604800
+
+/apple-touch-icon.png
+  Cache-Control: public, max-age=604800
+
+/og-image.png
+  Cache-Control: public, max-age=604800
