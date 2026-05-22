@@ -7,8 +7,15 @@ const WalletStatsHub = dynamic(() => import('@/components/WalletStatsHub'), { ss
 const TokenBurnLock = dynamic(() => import('@/components/TokenBurnLock').then(m => ({ default: m.TokenBurnLock })), { ssr: false });
 
 export const metadata: Metadata = {
-  title: 'Burn or Lock - SolTools',
-  description: 'Burn or permanently lock tokens on Solana. Build trust with your community. Zero fees, fully verifiable.',
+  title: 'Burn & Lock Tokens',
+  description: 'Permanently burn or lock Solana tokens to build community trust. Send to a black hole address or time-lock via on-chain transactions. Zero fees.',
+  alternates: { canonical: 'https://soltools.net/burn-lock' },
+  openGraph: {
+    title: 'Burn & Lock Tokens — SolTools',
+    description: 'Permanently burn or lock Solana tokens. Build trust, provably on-chain.',
+    url: 'https://soltools.net/burn-lock',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+  },
 };
 
 export default function BurnPage() {

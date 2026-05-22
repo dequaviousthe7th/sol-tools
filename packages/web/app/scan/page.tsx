@@ -4,8 +4,15 @@ import { Heartbeat } from '@/components/Heartbeat';
 import { MobileToolDropdown } from '@/components/MobileToolDropdown';
 
 export const metadata: Metadata = {
-  title: 'Token Scanner - SolTools',
-  description: 'Instant safety reports for any Solana token. Check risk scores, holder concentration, LP status, and market data.',
+  title: 'Token Scanner',
+  description: 'Instant Solana token safety reports. Check risk score, holder concentration, LP lock status, and live market data before you ape.',
+  alternates: { canonical: 'https://soltools.net/scan' },
+  openGraph: {
+    title: 'Token Scanner — SolTools',
+    description: 'Instant Solana token safety: risk score, LP status, holder concentration, market data.',
+    url: 'https://soltools.net/scan',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+  },
 };
 
 const WalletStatsHub = dynamic(() => import('@/components/WalletStatsHub'), { ssr: false });

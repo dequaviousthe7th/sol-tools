@@ -4,8 +4,15 @@ import { WalletButton } from '@/components/WalletButton';
 import { MobileToolDropdown } from '@/components/MobileToolDropdown';
 
 export const metadata: Metadata = {
-  title: 'Vanity Wallet Generator - SolTools',
-  description: 'Generate custom Solana wallet addresses with your chosen prefix or suffix. Free, client-side, secure.',
+  title: 'Vanity Wallet Generator',
+  description: 'Generate custom Solana wallet addresses with any prefix or suffix. Runs client-side in your browser — private keys never leave your device.',
+  alternates: { canonical: 'https://soltools.net/vanity' },
+  openGraph: {
+    title: 'Vanity Wallet Generator — SolTools',
+    description: 'Generate custom Solana addresses with any prefix/suffix. Client-side, keys stay private.',
+    url: 'https://soltools.net/vanity',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+  },
 };
 
 const WalletStatsHub = dynamic(() => import('@/components/WalletStatsHub'), { ssr: false });

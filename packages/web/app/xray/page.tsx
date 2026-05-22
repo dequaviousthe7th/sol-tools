@@ -4,8 +4,15 @@ import { Heartbeat } from '@/components/Heartbeat';
 import { MobileToolDropdown } from '@/components/MobileToolDropdown';
 
 export const metadata: Metadata = {
-  title: 'Wallet X-Ray - SolTools',
-  description: 'See any wallet\'s true trading performance. PnL breakdown, win rate, trader grade, and per-token analysis.',
+  title: 'Wallet X-Ray',
+  description: "Deep-dive any Solana wallet's real trading performance. PnL breakdown, win rate, trader grade, and per-token analysis. Free, no login.",
+  alternates: { canonical: 'https://soltools.net/xray' },
+  openGraph: {
+    title: 'Wallet X-Ray — SolTools',
+    description: "See any wallet's true Solana trading performance. PnL, win rate, trader grade.",
+    url: 'https://soltools.net/xray',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+  },
 };
 
 const WalletStatsHub = dynamic(() => import('@/components/WalletStatsHub'), { ssr: false });

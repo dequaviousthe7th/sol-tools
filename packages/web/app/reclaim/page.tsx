@@ -8,8 +8,15 @@ import { MobileToolDropdown } from '@/components/MobileToolDropdown';
 const WalletStatsHub = dynamic(() => import('@/components/WalletStatsHub'), { ssr: false });
 
 export const metadata: Metadata = {
-  title: 'Reclaim SOL - SolTools',
-  description: 'Reclaim locked SOL from empty token accounts. Zero fees, fully verifiable.',
+  title: 'Reclaim SOL',
+  description: 'Close empty Solana token accounts and reclaim locked SOL rent instantly. Zero fees, no private key needed, fully verifiable on-chain.',
+  alternates: { canonical: 'https://soltools.net/reclaim' },
+  openGraph: {
+    title: 'Reclaim SOL — SolTools',
+    description: 'Get your locked SOL back from empty token accounts. Free, instant, on-chain.',
+    url: 'https://soltools.net/reclaim',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+  },
 };
 
 export default function ReclaimPage() {
