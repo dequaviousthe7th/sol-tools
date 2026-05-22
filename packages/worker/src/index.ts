@@ -269,6 +269,28 @@ async function verifyAdmin(request: Request, env: Env): Promise<boolean> {
   return crypto.subtle.timingSafeEqual(a, b);
 }
 
+// Session token helpers — issued after TOTP verification, required on all admin ops when TOTP is on
+async function createAdminSession(env: Env): Promise<string> {
+  const sessionId = crypto.randomUUID();
+  await env.STATS.put(`admin:session:${sessionId}`, '1', { expirationTtl: 3600 });
+  return sessionId;
+}
+
+async function verifyAdminSession(request: Request, env: Env): Promise<boolean> {
+  const sessionId = request.headers.get('X-Admin-Session');
+  if (!sessionId || !/^[0-9a-f-]{36}$/.test(sessionId)) return false;
+  const raw = await env.STATS.get(`admin:session:${sessionId}`);
+  return raw === '1';
+}
+
+// Full admin verification: bearer token always required; session token also required when TOTP is enabled
+async function verifyAdminFull(request: Request, env: Env): Promise<boolean> {
+  if (!(await verifyAdmin(request, env))) return false;
+  const totpEnabled = await isTOTPEnabled(env);
+  if (!totpEnabled) return true;
+  return verifyAdminSession(request, env);
+}
+
 // KV-based brute-force lockout
 async function isAdminBlocked(ip: string, env: Env): Promise<boolean> {
   const raw = await env.STATS.get(`admin:blocked:${ip}`);
@@ -299,8 +321,8 @@ function corsHeaders(request: Request, env: Env): Record<string, string> {
 
   return {
     'Access-Control-Allow-Origin': allowed ? origin : 'https://soltools.net',
-    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type, solana-client, Authorization',
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE, PATCH, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, solana-client, Authorization, X-Admin-Session',
     'Access-Control-Max-Age': '86400',
   };
 }
@@ -462,23 +484,31 @@ async function handlePostStats(request: Request, env: Env): Promise<Response> {
     return jsonResponse({ error: 'Invalid body' }, 400, request, env);
   }
 
-  // Validate signatures if provided
+  // Validate signatures — must be plausible base58 tx hashes (43-88 chars, alphanumeric)
+  const SIG_RE = /^[1-9A-HJ-NP-Za-km-z]{43,88}$/;
   const sigs: string[] = Array.isArray(signatures)
-    ? signatures.filter((s): s is string => typeof s === 'string' && s.length > 0)
+    ? signatures.filter((s): s is string => typeof s === 'string' && SIG_RE.test(s)).slice(0, 20)
     : [];
 
   const today = todayKey();
   const month = monthKey();
 
   // Synchronous KV reads
-  const [rawGlobal, rawWallet, rawRecent, rawHistory, rawDailyReclaims, rawMonthlyReclaims] = await Promise.all([
+  const [rawGlobal, rawWallet, rawRecent, rawHistory, rawDailyReclaims, rawMonthlyReclaims, rawWalletDaily] = await Promise.all([
     env.STATS.get('stats:global'),
     env.STATS.get(`wallet:${wallet}`),
     env.STATS.get('stats:recent'),
     env.STATS.get('stats:history'),
     env.STATS.get(`analytics:reclaims:daily:${today}`),
     env.STATS.get(`analytics:reclaims:monthly:${month}`),
+    env.STATS.get(`wallet:${wallet}:daily:${today}`),
   ]);
+
+  // Per-wallet daily cap: max 20 SOL/day (far above any legitimate use)
+  const walletDailySol = rawWalletDaily ? parseFloat(rawWalletDaily) : 0;
+  if (walletDailySol + solReclaimed > 20) {
+    return jsonResponse({ error: 'Daily limit exceeded' }, 429, request, env);
+  }
 
   const global: GlobalStats = rawGlobal
     ? JSON.parse(rawGlobal)
@@ -543,6 +573,7 @@ async function handlePostStats(request: Request, env: Env): Promise<Response> {
     env.STATS.put('stats:history', JSON.stringify(history)),
     env.STATS.put(`analytics:reclaims:daily:${today}`, JSON.stringify(dailyReclaims)),
     env.STATS.put(`analytics:reclaims:monthly:${month}`, JSON.stringify(monthlyReclaims)),
+    env.STATS.put(`wallet:${wallet}:daily:${today}`, String(walletDailySol + solReclaimed), { expirationTtl: 172800 }),
   ]);
 
   return jsonResponse({ ok: true }, 200, request, env);
@@ -679,12 +710,13 @@ async function handleAdminVerify(request: Request, env: Env): Promise<Response> 
     }
   }
 
-  return jsonResponse({ ok: true }, 200, request, env);
+  const sessionId = await createAdminSession(env);
+  return jsonResponse({ ok: true, sessionId }, 200, request, env);
 }
 
 // TOTP setup: generates a new secret and returns it (does NOT enable yet)
 async function handleTOTPSetup(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -702,7 +734,7 @@ async function handleTOTPSetup(request: Request, env: Env): Promise<Response> {
 
 // TOTP confirm: verifies a code against the pending secret, then enables TOTP
 async function handleTOTPConfirm(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -739,7 +771,7 @@ async function handleTOTPConfirm(request: Request, env: Env): Promise<Response> 
 
 // TOTP disable: requires valid TOTP code to disable
 async function handleTOTPDisable(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -774,7 +806,7 @@ async function handleTOTPDisable(request: Request, env: Env): Promise<Response> 
 
 // TOTP status: check if TOTP is enabled (requires admin auth)
 async function handleTOTPStatus(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -783,7 +815,7 @@ async function handleTOTPStatus(request: Request, env: Env): Promise<Response> {
 }
 
 async function handleAdminDashboard(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -874,7 +906,7 @@ async function handleAdminDashboard(request: Request, env: Env): Promise<Respons
 }
 
 async function handleAdminReclaims(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -899,7 +931,7 @@ async function handleAdminReclaims(request: Request, env: Env): Promise<Response
 }
 
 async function handleAdminVisitors(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -910,7 +942,7 @@ async function handleAdminVisitors(request: Request, env: Env): Promise<Response
 }
 
 async function handleAdminPatchStats(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -926,16 +958,16 @@ async function handleAdminPatchStats(request: Request, env: Env): Promise<Respon
     ? JSON.parse(raw)
     : { totalSolReclaimed: 0, totalAccountsClosed: 0, totalWallets: 0 };
 
-  if (typeof body.totalSolReclaimed === 'number') current.totalSolReclaimed = body.totalSolReclaimed;
-  if (typeof body.totalAccountsClosed === 'number') current.totalAccountsClosed = body.totalAccountsClosed;
-  if (typeof body.totalWallets === 'number') current.totalWallets = body.totalWallets;
+  if (typeof body.totalSolReclaimed === 'number' && Number.isFinite(body.totalSolReclaimed) && body.totalSolReclaimed >= 0) current.totalSolReclaimed = body.totalSolReclaimed;
+  if (typeof body.totalAccountsClosed === 'number' && Number.isFinite(body.totalAccountsClosed) && body.totalAccountsClosed >= 0) current.totalAccountsClosed = body.totalAccountsClosed;
+  if (typeof body.totalWallets === 'number' && Number.isFinite(body.totalWallets) && body.totalWallets >= 0) current.totalWallets = body.totalWallets;
 
   await env.STATS.put('stats:global', JSON.stringify(current));
   return jsonResponse({ ok: true, stats: current }, 200, request, env);
 }
 
 async function handleAdminChart(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -1286,7 +1318,7 @@ async function handleHackathonSubmit(request: Request, env: Env): Promise<Respon
 // ──────────────────────────────────────────────
 
 async function handleAdminHackathonSubmissions(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -1316,7 +1348,7 @@ async function handleAdminHackathonSubmissions(request: Request, env: Env): Prom
 }
 
 async function handleAdminHackathonApprove(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -1363,7 +1395,7 @@ async function handleAdminHackathonApprove(request: Request, env: Env): Promise<
 }
 
 async function handleAdminHackathonReject(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -1785,7 +1817,7 @@ async function handleVanityDeduct(request: Request, env: Env): Promise<Response>
 // ──────────────────────────────────────────────
 
 async function handleAdminVanityDashboard(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -1833,7 +1865,7 @@ async function handleAdminVanityDashboard(request: Request, env: Env): Promise<R
 }
 
 async function handleAdminVanityChart(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -1885,7 +1917,7 @@ async function handleAdminVanityChart(request: Request, env: Env): Promise<Respo
 }
 
 async function handleAdminVanityPurchases(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -3221,7 +3253,7 @@ async function handleFeatureRequest(request: Request, env: Env): Promise<Respons
 }
 
 async function handleAdminFeatureRequests(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -3244,7 +3276,7 @@ async function handleAdminFeatureRequests(request: Request, env: Env): Promise<R
 }
 
 async function handleAdminFeatureRequestUpdate(request: Request, env: Env): Promise<Response> {
-  if (!(await verifyAdmin(request, env))) {
+  if (!(await verifyAdminFull(request, env))) {
     return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
   }
 
@@ -3256,7 +3288,7 @@ async function handleAdminFeatureRequestUpdate(request: Request, env: Env): Prom
   }
 
   const { id, status } = body;
-  if (!id || typeof id !== 'string') {
+  if (!id || typeof id !== 'string' || !id.startsWith('feature-request:')) {
     return jsonResponse({ error: 'Invalid id' }, 400, request, env);
   }
   const validStatuses = ['noted', 'planned', 'done', 'dismissed'];
