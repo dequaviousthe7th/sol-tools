@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /d/
+Disallow: /stb
+Allow: /
+
+Sitemap: https://soltools.net/sitemap.xml
