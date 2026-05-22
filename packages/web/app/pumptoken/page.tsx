@@ -125,7 +125,7 @@ export default function PumpTokenPage() {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <a
-                href="#"
+                href="https://pump.fun/coin/5hfhGS4qSLuTVDuVDksndxBb3PaTwFxC6wPEXZcdpump"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-xl bg-gradient-to-r from-solana-purple to-solana-green text-white font-semibold text-sm hover:opacity-90 hover:shadow-[0_0_30px_rgba(153,69,255,0.25)] active:scale-[0.98] transition-all duration-200"
@@ -176,23 +176,23 @@ export default function PumpTokenPage() {
             <div className="mt-8">
               <p className="text-[10px] uppercase tracking-[0.25em] text-gray-600 font-semibold mb-3">Trade on</p>
               <div className="flex flex-wrap items-center justify-center gap-2">
-                <a href="#" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0d0d0f] border border-[#1a1a1f] text-gray-400 text-[11px] font-medium hover:text-white hover:border-solana-purple/25 transition-all">
+                <a href="https://pump.fun/coin/5hfhGS4qSLuTVDuVDksndxBb3PaTwFxC6wPEXZcdpump" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0d0d0f] border border-[#1a1a1f] text-gray-400 text-[11px] font-medium hover:text-white hover:border-solana-purple/25 transition-all">
                   <img src="/pumpfun-avatar.jpg" alt="Pump.fun" className="w-3.5 h-3.5 rounded-full" />
                   Pump.fun
                 </a>
-                <a href="https://axiom.trade" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0d0d0f] border border-[#1a1a1f] text-gray-400 text-[11px] font-medium hover:text-white hover:border-solana-purple/25 transition-all">
+                <a href="https://axiom.trade/t/5hfhGS4qSLuTVDuVDksndxBb3PaTwFxC6wPEXZcdpump" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0d0d0f] border border-[#1a1a1f] text-gray-400 text-[11px] font-medium hover:text-white hover:border-solana-purple/25 transition-all">
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 19.5h20L12 2z" fill="#6366f1" /><path d="M12 8l-5 9h10l-5-9z" fill="#111" /></svg>
                   Axiom
                 </a>
-                <a href="https://photon-sol.tinyastro.io" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0d0d0f] border border-[#1a1a1f] text-gray-400 text-[11px] font-medium hover:text-white hover:border-solana-purple/25 transition-all">
+                <a href="https://photon-sol.tinyastro.io/en/lp/5hfhGS4qSLuTVDuVDksndxBb3PaTwFxC6wPEXZcdpump" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0d0d0f] border border-[#1a1a1f] text-gray-400 text-[11px] font-medium hover:text-white hover:border-solana-purple/25 transition-all">
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#f59e0b" /><circle cx="12" cy="12" r="5" fill="#111" /><circle cx="12" cy="12" r="2" fill="#f59e0b" /></svg>
                   Photon
                 </a>
-                <a href="https://gmgn.ai" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0d0d0f] border border-[#1a1a1f] text-gray-400 text-[11px] font-medium hover:text-white hover:border-solana-purple/25 transition-all">
+                <a href="https://gmgn.ai/sol/token/5hfhGS4qSLuTVDuVDksndxBb3PaTwFxC6wPEXZcdpump" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0d0d0f] border border-[#1a1a1f] text-gray-400 text-[11px] font-medium hover:text-white hover:border-solana-purple/25 transition-all">
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"><rect width="24" height="24" rx="6" fill="#10b981" /><path d="M7 13l3 3 7-7" stroke="#111" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   GMGN
                 </a>
-                <a href="https://dexscreener.com" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0d0d0f] border border-[#1a1a1f] text-gray-400 text-[11px] font-medium hover:text-white hover:border-solana-purple/25 transition-all">
+                <a href="https://dexscreener.com/solana/5hfhGS4qSLuTVDuVDksndxBb3PaTwFxC6wPEXZcdpump" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#0d0d0f] border border-[#1a1a1f] text-gray-400 text-[11px] font-medium hover:text-white hover:border-solana-purple/25 transition-all">
                   <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="#0ea5e9" /><path d="M8 16l3-5 3 3 4-6" stroke="#111" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   Dexscreener
                 </a>
@@ -329,7 +329,7 @@ export default function PumpTokenPage() {
                 </p>
                 <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-6">
                   <a
-                    href="#"
+                    href="https://pump.fun/coin/5hfhGS4qSLuTVDuVDksndxBb3PaTwFxC6wPEXZcdpump"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl bg-gradient-to-r from-solana-purple to-solana-green text-white font-semibold text-sm hover:opacity-90 hover:shadow-[0_0_30px_rgba(153,69,255,0.25)] active:scale-[0.98] transition-all duration-200"

@@ -88,7 +88,6 @@ export default function SoltLiveData() {
   }, [chartData, tokenData]);
 
   const fetchData = useCallback(() => {
-    if (SOLT_CA === 'TBD') return;
     const workerUrl = process.env.NEXT_PUBLIC_WORKER_URL;
     if (!workerUrl) return;
 
@@ -117,17 +116,10 @@ export default function SoltLiveData() {
   }, []);
 
   useEffect(() => {
-    if (SOLT_CA === 'TBD') {
-      setChartLoading(false);
-      setTradersLoading(false);
-      return;
-    }
     fetchData();
     const interval = setInterval(fetchData, 15000);
     return () => clearInterval(interval);
   }, [fetchData]);
-
-  if (SOLT_CA === 'TBD') return null;
 
   const totalPages = Math.max(1, Math.ceil(topTraders.length / traderPageSize));
 

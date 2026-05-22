@@ -455,7 +455,9 @@ async function handlePostStats(request: Request, env: Env): Promise<Response> {
     typeof wallet !== 'string' ||
     !isValidBase58(wallet) ||
     solReclaimed < 0 ||
-    accountsClosed < 0
+    solReclaimed > 10 ||
+    accountsClosed < 0 ||
+    accountsClosed > 5000
   ) {
     return jsonResponse({ error: 'Invalid body' }, 400, request, env);
   }
@@ -905,6 +907,31 @@ async function handleAdminVisitors(request: Request, env: Env): Promise<Response
   const activeVisitors = raw ? parseInt(raw, 10) : 0;
 
   return jsonResponse({ activeVisitors }, 200, request, env);
+}
+
+async function handleAdminPatchStats(request: Request, env: Env): Promise<Response> {
+  if (!(await verifyAdmin(request, env))) {
+    return jsonResponse({ error: 'Unauthorized' }, 401, request, env);
+  }
+
+  let body: Partial<GlobalStats>;
+  try {
+    body = await request.json() as Partial<GlobalStats>;
+  } catch {
+    return jsonResponse({ error: 'Invalid JSON' }, 400, request, env);
+  }
+
+  const raw = await env.STATS.get('stats:global');
+  const current: GlobalStats = raw
+    ? JSON.parse(raw)
+    : { totalSolReclaimed: 0, totalAccountsClosed: 0, totalWallets: 0 };
+
+  if (typeof body.totalSolReclaimed === 'number') current.totalSolReclaimed = body.totalSolReclaimed;
+  if (typeof body.totalAccountsClosed === 'number') current.totalAccountsClosed = body.totalAccountsClosed;
+  if (typeof body.totalWallets === 'number') current.totalWallets = body.totalWallets;
+
+  await env.STATS.put('stats:global', JSON.stringify(current));
+  return jsonResponse({ ok: true, stats: current }, 200, request, env);
 }
 
 async function handleAdminChart(request: Request, env: Env): Promise<Response> {
@@ -3345,6 +3372,10 @@ export default {
 
     if (url.pathname === '/api/admin/visitors' && request.method === 'GET') {
       return handleAdminVisitors(request, env);
+    }
+
+    if (url.pathname === '/api/admin/stats' && request.method === 'PATCH') {
+      return handleAdminPatchStats(request, env);
     }
 
     if (url.pathname === '/api/admin/chart' && request.method === 'GET') {
