@@ -2,8 +2,16 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
-  title: 'Discord Bot - SolTools',
+  title: 'SolToolsBot — Solana Discord Bot',
   description: 'Real-time Solana token intelligence for Discord. Scan tokens, track fee locks, spot trending Pump.fun tokens, and more.',
+  alternates: { canonical: 'https://soltools.net/stb' },
+  openGraph: {
+    title: 'SolToolsBot — Solana Discord Bot',
+    description: 'Real-time Solana token intelligence for Discord. Scan tokens, track fee locks, spot trending Pump.fun tokens, and more.',
+    url: 'https://soltools.net/stb',
+    siteName: 'SolTools',
+    type: 'website',
+  },
 };
 
 const commands = [
