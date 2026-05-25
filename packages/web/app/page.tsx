@@ -224,6 +224,13 @@ export default function HubPage() {
       {/* Coming soon teaser + feature request trigger */}
       <FeatureRequestTrigger />
 
+      {/* Mobile-only legal link — desktop has the sidebar Legal entry */}
+      <div className="xl:hidden flex justify-center py-4">
+        <Link href="/legal" className="text-[11px] text-gray-700 hover:text-gray-500 transition-colors">
+          Privacy · Terms · Disclaimer
+        </Link>
+      </div>
+
     </main>
   );
 }
