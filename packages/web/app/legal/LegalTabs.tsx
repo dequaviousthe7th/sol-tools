@@ -66,7 +66,10 @@ function PrivacyPolicy() {
             stored alongside your transaction history (SOL amounts, account counts, timestamps,
             transaction signatures). This data maintains the reclaim ledger and verifies token ownership.
             Additionally, recent wallet addresses and reclaim amounts are displayed publicly on the
-            SolTools homepage activity feed as part of the platform&apos;s transparency features.
+            SolTools homepage activity feed as part of the platform&apos;s transparency features. When
+            any wallet address is queried through Wallet X-Ray, the resulting analysis (derived entirely
+            from publicly available on-chain data) is cached in our systems for up to 20 minutes to
+            improve performance, then automatically deleted.
           </Li>
           <Li>
             <strong className="text-gray-300">Anonymous session identifiers</strong> — A random UUID is
@@ -100,6 +103,11 @@ function PrivacyPolicy() {
       <Section title="What We Do Not Collect">
         <Ul>
           <Li>Cookies of any kind — we set none</Li>
+          <Li>
+            Personal data in browser storage — your browser&apos;s localStorage holds only UI preferences
+            (sidebar open/closed state, dismissed notification banners). This data never leaves your
+            device and is not transmitted to our servers.
+          </Li>
           <Li>Email addresses (unless you voluntarily include one in a feature request)</Li>
           <Li>Private keys or seed phrases — SolTools is entirely non-custodial</Li>
           <Li>Precise geolocation or device fingerprints</Li>
