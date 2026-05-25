@@ -77,6 +77,26 @@ export const MobileToolDropdown = () => {
               </Link>
             );
           })}
+          {/* Separator */}
+          <div className="mx-3 my-1 border-t border-[#222228]" />
+          {/* Legal */}
+          <Link
+            href="/legal"
+            onClick={() => setOpen(false)}
+            className={`flex items-center gap-3 px-4 py-2.5 transition-colors ${
+              pathname === '/legal'
+                ? 'text-solana-purple bg-solana-purple/10'
+                : 'text-gray-400 hover:text-white hover:bg-[#16161a]'
+            }`}
+          >
+            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+            </svg>
+            <div>
+              <div className="text-sm font-medium">Legal</div>
+              <div className="text-[10px] text-gray-600">Privacy, Terms & Disclaimer</div>
+            </div>
+          </Link>
         </div>
       )}
     </div>
