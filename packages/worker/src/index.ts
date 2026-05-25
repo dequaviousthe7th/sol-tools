@@ -3334,6 +3334,14 @@ export default {
       });
     }
 
+    // Disallow all crawling on the API domain
+    if (url.pathname === '/robots.txt' && request.method === 'GET') {
+      return new Response('User-agent: *\nDisallow: /\n', {
+        status: 200,
+        headers: { 'Content-Type': 'text/plain' },
+      });
+    }
+
     // Route: POST /api/rpc
     if (url.pathname === '/api/rpc' && request.method === 'POST') {
       return handleRpc(request, env);
