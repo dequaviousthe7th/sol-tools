@@ -1510,6 +1510,11 @@ async function handleVanityBalance(request: Request, env: Env): Promise<Response
 }
 
 async function handleVanityPurchase(request: Request, env: Env): Promise<Response> {
+  const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
+  if (isRateLimited(ip)) {
+    return jsonResponse({ error: 'Rate limited' }, 429, request, env);
+  }
+
   let body: { wallet?: string; signature?: string; tier?: string };
   try {
     body = await request.json() as typeof body;
@@ -1533,12 +1538,14 @@ async function handleVanityPurchase(request: Request, env: Env): Promise<Respons
     return jsonResponse({ error: 'Service unavailable' }, 503, request, env);
   }
 
-  // Prevent double-credit replay
+  // Prevent double-credit replay — claim the key immediately to close the TOCTOU window
   const sigKey = `purchase:sig:${signature}`;
   const existing = await env.STATS.get(sigKey);
   if (existing) {
     return jsonResponse({ error: 'Signature already credited' }, 409, request, env);
   }
+  // Write before the RPC loop so concurrent requests see it and get 409
+  await env.STATS.put(sigKey, 'pending', { expirationTtl: 7_776_000 });
 
   // Fetch and verify transaction on-chain (retry up to 5 times with 3s delay for propagation)
   const heliusUrl = `https://mainnet.helius-rpc.com/?api-key=${env.HELIUS_API_KEY}`;
@@ -1587,6 +1594,7 @@ async function handleVanityPurchase(request: Request, env: Env): Promise<Respons
   }
 
   if (!rpcData?.result) {
+    await env.STATS.delete(sigKey);
     return jsonResponse({ error: 'Transaction not found after retries. It may still be confirming — please try again in a minute.' }, 404, request, env);
   }
 
@@ -1594,11 +1602,13 @@ async function handleVanityPurchase(request: Request, env: Env): Promise<Respons
 
   // Verify no error
   if (tx.meta?.err) {
+    await env.STATS.delete(sigKey);
     return jsonResponse({ error: 'Transaction failed on-chain' }, 400, request, env);
   }
 
   const message = tx.transaction?.message;
   if (!message) {
+    await env.STATS.delete(sigKey);
     return jsonResponse({ error: 'Invalid transaction structure' }, 400, request, env);
   }
 
@@ -1606,6 +1616,7 @@ async function handleVanityPurchase(request: Request, env: Env): Promise<Respons
   const accountKeys = message.accountKeys || [];
   const isSigner = accountKeys.some(k => k.pubkey === wallet && k.signer);
   if (!isSigner) {
+    await env.STATS.delete(sigKey);
     return jsonResponse({ error: 'Wallet is not a signer on this transaction' }, 400, request, env);
   }
 
@@ -1626,6 +1637,7 @@ async function handleVanityPurchase(request: Request, env: Env): Promise<Respons
   });
 
   if (!hasValidTransfer) {
+    await env.STATS.delete(sigKey);
     return jsonResponse({ error: 'No matching transfer found in transaction' }, 400, request, env);
   }
 
@@ -1698,7 +1710,6 @@ async function handleVanityPurchase(request: Request, env: Env): Promise<Respons
     ...tokenIds.map(id =>
       env.STATS.put(`vanity:tokens:${wallet}:${id}`, '1')
     ),
-    env.STATS.put(sigKey, '1', { expirationTtl: 7_776_000 }), // 90 days
     env.STATS.put(`purchase:log:${wallet}:${Date.now()}`, JSON.stringify({
       tier,
       tokens: tierData.tokens,
@@ -3338,7 +3349,7 @@ export default {
     if (url.pathname === '/robots.txt' && request.method === 'GET') {
       return new Response('User-agent: *\nDisallow: /\n', {
         status: 200,
-        headers: { 'Content-Type': 'text/plain' },
+        headers: { 'Content-Type': 'text/plain', 'Cache-Control': 'public, max-age=86400' },
       });
     }
 
