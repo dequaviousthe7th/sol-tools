@@ -1,32 +1,34 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/Solana-9945FF?style=for-the-badge&logo=solana&logoColor=white" alt="Solana"/>
-  <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"/>
-  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js"/>
-  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" alt="Node.js"/>
-  <img src="https://img.shields.io/badge/Rust-DEA584?style=for-the-badge&logo=rust&logoColor=black" alt="Rust"/>
-</p>
-
-<h1 align="center">SolTools</h1>
-
-<p align="center">
-  <b>Free, verifiable Solana tools. No fees, no tracking, no compromise.</b>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/readme/banner-dark.svg">
+    <img alt="SolTools: verifiable Solana tools with no platform fees and no tracking." src=".github/readme/banner-light.svg" width="100%">
+  </picture>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Version-1.7.0-9945FF.svg" alt="Version 1.7.0"/>
-  <img src="https://img.shields.io/badge/License-Proprietary-red.svg" alt="License: Proprietary"/>
-  <img src="https://img.shields.io/badge/Fees-0%25-14F195.svg" alt="Zero Fees"/>
+  <b>Six Solana tools for traders and developers, live at soltools.net.</b>
 </p>
 
 <p align="center">
-  <img src="docs/preview-hub.png?v=2" alt="SolTools Hub" width="800"/>
+  <a href="https://soltools.net"><b>Open SolTools</b></a> &nbsp;·&nbsp;
+  <a href="#tools"><b>The tools</b></a> &nbsp;·&nbsp;
+  <a href="#quick-start"><b>Quick start</b></a>
 </p>
 
----
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset=".github/readme/divider-dark.svg">
+    <img alt="" src=".github/readme/divider-light.svg" width="100%">
+  </picture>
+</p>
+
+<p align="center">
+  <img src="docs/preview-hub.png?v=2" alt="The SolTools hub" width="100%"/>
+</p>
 
 ## Overview
 
-**SolTools** is a collection of free Solana utilities at [soltools.net](https://soltools.net).
+**SolTools** is a collection of Solana utilities at [soltools.net](https://soltools.net). The tools charge no platform fee, and vanity searches are paid with tokens.
 
 ### Tools
 
@@ -318,4 +320,10 @@ The vanity generator creates Solana keypairs with custom prefixes or suffixes. A
 
 <p align="center">
   <b>Built by Dequavious</b>
+</p>
+
+---
+
+<p align="center">
+  <sub>Built by <a href="https://dequavious.dev"><b>Khaled Jamal</b></a>, known online as Dequavious. Founder of <a href="https://usehelm.host">Helm</a>.</sub>
 </p>
